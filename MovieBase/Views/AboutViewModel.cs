@@ -1,4 +1,4 @@
-﻿namespace MovieBase.ViewModels
+﻿namespace Moviebase.ViewModels
 {
     public class AboutViewModel : BindableBase
     {

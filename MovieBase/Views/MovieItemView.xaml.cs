@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace MovieBase.Views
+namespace Moviebase.Views
 {
     /// <summary>
     /// Interaction logic for MovieItemView.xaml

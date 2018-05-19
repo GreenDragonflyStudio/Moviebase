@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace MovieBase.ViewModels
+namespace Moviebase.ViewModels
 {
     public class MenuItem : BindableBase
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Controls;
 
-namespace MovieBase.Helper
+namespace Moviebase.Helper
 {
     public static class Navigation
     {

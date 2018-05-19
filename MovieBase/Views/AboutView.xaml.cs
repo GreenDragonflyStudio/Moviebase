@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace MovieBase.Views
+namespace Moviebase.Views
 {
     /// <summary>
     /// Interaction logic for AboutViewModel.xaml

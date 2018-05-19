@@ -1,9 +1,9 @@
-﻿using MovieBase.Helper;
+﻿using Moviebase.Helper;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace MovieBase.ViewModels
+namespace Moviebase.ViewModels
 {
     /// <summary>
     /// Implementation of <see cref="INotifyPropertyChanged"/> to simplify models.

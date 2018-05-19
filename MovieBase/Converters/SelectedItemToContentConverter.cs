@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
 
-namespace MovieBase.Converters
+namespace Moviebase.Converters
 {
     public class SelectedItemToContentConverter : IMultiValueConverter
     {

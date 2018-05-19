@@ -1,8 +1,8 @@
-﻿using MovieBase.Helper;
-using MovieBase.Models;
+﻿using Moviebase.Helper;
+using Moviebase.Models;
 using System.Collections.ObjectModel;
 
-namespace MovieBase.ViewModels
+namespace Moviebase.ViewModels
 {
     public class HomeViewModel : BindableBase
     {

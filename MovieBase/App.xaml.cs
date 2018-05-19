@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace MovieBase
+namespace Moviebase
 {
     /// <summary>
     /// Interaction logic for App.xaml

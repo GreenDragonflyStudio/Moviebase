@@ -1,13 +1,13 @@
 ﻿using MahApps.Metro.Controls;
-using MovieBase.Helper;
-using MovieBase.ViewModels;
+using Moviebase.Helper;
+using Moviebase.ViewModels;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
-using mMenuItem = MovieBase.ViewModels.MenuItem;
+using mMenuItem = Moviebase.ViewModels.MenuItem;
 
-namespace MovieBase
+namespace Moviebase
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

@@ -1,10 +1,10 @@
-﻿using MovieBase.Helper;
+﻿using Moviebase.Helper;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace MovieBase.ViewModels
+namespace Moviebase.ViewModels
 {
     public class CollectionViewModel : BindableBase
     {

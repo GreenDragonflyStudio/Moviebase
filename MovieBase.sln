@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieBase.UI", "MovieBase\MovieBase.UI.csproj", "{FADEE4C9-D4A2-4DE4-980A-45193ABDA1EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moviebase.UI", "MovieBase\Moviebase.UI.csproj", "{FADEE4C9-D4A2-4DE4-980A-45193ABDA1EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieBase.Core", "MovieBase.Core\MovieBase.Core.csproj", "{59EDB2F5-6D53-4540-80CC-1E7BA7ED8A31}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moviebase.Core", "MovieBase.Core\Moviebase.Core.csproj", "{59EDB2F5-6D53-4540-80CC-1E7BA7ED8A31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

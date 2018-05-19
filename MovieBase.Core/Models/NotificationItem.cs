@@ -1,4 +1,4 @@
-﻿namespace MovieBase.Models
+﻿namespace Moviebase.Models
 {
     public class NotificationItem
     {

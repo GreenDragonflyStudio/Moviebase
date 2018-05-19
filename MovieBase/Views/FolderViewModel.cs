@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace MovieBase.ViewModels
+namespace Moviebase.ViewModels
 {
     public class FolderViewModel : BindableBase
     {

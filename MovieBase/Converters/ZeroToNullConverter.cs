@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace MovieBase.Converters
+namespace Moviebase.Converters
 {
     public class ZeroToNullConverter : IValueConverter
     {

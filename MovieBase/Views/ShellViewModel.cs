@@ -1,11 +1,11 @@
 ﻿using MahApps.Metro.IconPacks;
-using MovieBase.Helper;
-using MovieBase.Models;
+using Moviebase.Helper;
+using Moviebase.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace MovieBase.ViewModels
+namespace Moviebase.ViewModels
 {
     public class ShellViewModel : BindableBase
     {

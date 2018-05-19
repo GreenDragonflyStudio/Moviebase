@@ -1,7 +1,7 @@
-﻿using MovieBase.Models;
+﻿using Moviebase.Models;
 using System.Collections.ObjectModel;
 
-namespace MovieBase.Helper
+namespace Moviebase.Helper
 {
     public static class NotificationProvider
     {

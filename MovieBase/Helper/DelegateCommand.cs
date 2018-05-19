@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 
-namespace MovieBase.ViewModels
+namespace Moviebase.ViewModels
 {
     public class DelegateCommand : ICommand
     {

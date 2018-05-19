@@ -1,7 +1,7 @@
-﻿using MovieBase.ViewModels;
+﻿using Moviebase.ViewModels;
 using System.Windows.Controls;
 
-namespace MovieBase.Views
+namespace Moviebase.Views
 {
     /// <summary>
     /// Interaction logic for CollectionViewModel.xaml
