@@ -1,0 +1,20 @@
+﻿<UserControl x:Class="MovieBase.Views.SynchronizeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:local="clr-namespace:MovieBase.Views"
+             mc:Ignorable="d"
+             d:DesignHeight="337.5" d:DesignWidth="517.279">
+    <Grid>
+        <i:PackIconMaterial Kind="Sync" HorizontalAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" Height="57"  Width="57" Spin="True" SpinDuration="2" Flip="Vertical">
+            <i:PackIconMaterial.SpinEasingFunction>
+                <ExponentialEase EasingMode="EaseInOut" />
+            </i:PackIconMaterial.SpinEasingFunction>
+            <i:PackIconMaterial.Foreground>
+                <SolidColorBrush Color="#FF2E2E2E" Opacity="0.5" />
+            </i:PackIconMaterial.Foreground>
+        </i:PackIconMaterial>
+    </Grid>
+</UserControl>

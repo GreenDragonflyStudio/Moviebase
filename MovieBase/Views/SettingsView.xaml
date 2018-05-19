@@ -1,0 +1,32 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:MovieBase.Views"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls" x:Class="MovieBase.Views.SettingsView"
+             mc:Ignorable="d"
+             d:DesignHeight="341" d:DesignWidth="659">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="659" />
+        </Grid.ColumnDefinitions>
+        <TabControl x:Name="listBox" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" mah:TabControlHelper.Underlined="SelectedTabItem" mah:TabControlHelper.IsUnderlined="True" TabStripPlacement="Top">
+            <TabItem Header="Accounts">
+                <Grid />
+            </TabItem>
+            <TabItem Header="Integration">
+                <Grid />
+            </TabItem>
+            <TabItem Header="Backups">
+                <Grid />
+            </TabItem>
+            <TabItem Header="Synchronization">
+                <Grid />
+            </TabItem>
+            <TabItem Header="Update">
+                <Grid />
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>
