@@ -226,6 +226,10 @@
       <Project>{59edb2f5-6d53-4540-80cc-1e7ba7ed8a31}</Project>
       <Name>Moviebase.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Moviebase.DAL\Moviebase.DAL.csproj">
+      <Project>{90394018-92BA-45D8-8BB3-ABBF2BE9F84C}</Project>
+      <Name>Moviebase.DAL</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

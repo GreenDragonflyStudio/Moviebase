@@ -3,15 +3,16 @@ using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Threading;
+using Moviebase.DAL.Entities;
 
 namespace Moviebase.ViewModels
 {
     public class CollectionViewModel : BindableBase
     {
-        private Models.MovieItem _SelectedMovie;
+        private Movie _SelectedMovie;
 
-        public Models.MovieItem SelectedMovie { get { return _SelectedMovie; } set { _SelectedMovie = value; OnPropertyChanged("SelectedMovie"); } }
-        public ObservableCollection<Models.MovieItem> Movies { get; } = new ObservableCollection<Models.MovieItem>();
+        public Movie SelectedMovie { get { return _SelectedMovie; } set { _SelectedMovie = value; OnPropertyChanged("SelectedMovie"); } }
+        public ObservableCollection<Movie> Movies { get; } = new ObservableCollection<Movie>();
         private DispatcherTimer timer;
         private Random random;
 
@@ -31,8 +32,8 @@ namespace Moviebase.ViewModels
                 NotificationProvider.Notify("Load Complete");
             }
 
-            Action action = () => { foreach (Models.MovieItem i in Models.SampleData.Movies) Movies.Add(i); };
-            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(action));
+            //Action action = () => { foreach (Movie i in Models.SampleData.Movies) Movies.Add(i); };
+            //Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(action));
         }
 
         public void Start()
