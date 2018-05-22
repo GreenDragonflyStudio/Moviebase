@@ -1,9 +1,9 @@
 ﻿using MahApps.Metro.IconPacks;
 using Moviebase.Helper;
-using Moviebase.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Moviebase.DAL.Entities;
 
 namespace Moviebase.ViewModels
 {
@@ -43,16 +43,16 @@ namespace Moviebase.ViewModels
 
         private static readonly ObservableCollection<MenuItem> AppMenu = new ObservableCollection<MenuItem>();
         private static readonly ObservableCollection<MenuItem> AppOptionsMenu = new ObservableCollection<MenuItem>();
-        private ObservableCollection<NotificationItem> AppNotification = new ObservableCollection<NotificationItem>();
-        private static readonly ObservableCollection<Models.MovieItem> UnsyncedMovies = new ObservableCollection<Models.MovieItem>();
-        private readonly ObservableCollection<Models.MovieFolder> Folders = new ObservableCollection<Models.MovieFolder>();
+        private ObservableCollection<Notification> AppNotification = new ObservableCollection<Notification>();
+        private static readonly ObservableCollection<Movie> UnsyncedMovies = new ObservableCollection<Movie>();
+        private readonly ObservableCollection<Movie> Folders = new ObservableCollection<Movie>();
 
         public string NotificationCount
         {
             get => (NotificationProvider.Count() == 0 ? "" : NotificationProvider.Count().ToString());
         }
 
-        public ObservableCollection<NotificationItem> NotificationCollection
+        public ObservableCollection<Notification> NotificationCollection
         {
             get
             {
@@ -65,7 +65,7 @@ namespace Moviebase.ViewModels
             }
         }
 
-        public ObservableCollection<MovieItem> UnsyncedCollection
+        public ObservableCollection<Movie> UnsyncedCollection
         {
             get
             {

@@ -1,12 +1,12 @@
 ﻿using Moviebase.Helper;
-using Moviebase.Models;
 using System.Collections.ObjectModel;
+using Moviebase.DAL.Entities;
 
 namespace Moviebase.ViewModels
 {
     public class HomeViewModel : BindableBase
     {
-        public ObservableCollection<NotificationItem> NotificationCollection
+        public ObservableCollection<Notification> NotificationCollection
         {
             get
             {
