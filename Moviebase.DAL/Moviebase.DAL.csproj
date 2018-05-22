@@ -67,10 +67,10 @@
     <Compile Include="Entities\Movie.cs" />
     <Compile Include="Entities\Subscription.cs" />
     <Compile Include="MoviebaseContext.cs" />
+    <Compile Include="MoviebaseContextInitializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
