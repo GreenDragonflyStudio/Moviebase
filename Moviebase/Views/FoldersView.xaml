@@ -5,12 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Moviebase.Views"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
-    xmlns:m="clr-namespace:Moviebase.Models;assembly=Moviebase.Core" x:Class="Moviebase.Views.FoldersView"
+    xmlns:m="clr-namespace:Moviebase.DAL.Entities;assembly=Moviebase.DAL"
+    x:Class="Moviebase.Views.FoldersView"
              mc:Ignorable="d"
              d:DesignHeight="500" d:DesignWidth="700">
     <UserControl.Resources>
 
-        <DataTemplate x:Key="FolderItemTemplate" DataType="{x:Type m:MovieFolder}">
+        <DataTemplate x:Key="FolderItemTemplate" DataType="{x:Type m:Folder}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="2*" />
@@ -32,7 +33,7 @@
             <ColumnDefinition Width="245" />
         </Grid.ColumnDefinitions>
         <ListBox Margin="10,77,10,23" ItemTemplate="{StaticResource FolderItemTemplate}">
-            <m:MovieFolder Location="D:\Movies\" Tag="My Collection" />
+            <m:Folder Path="D:\Movies\" Tag="My Collection" />
         </ListBox>
         <TextBox Text ="{Binding FilterText, Mode=TwoWay}" Height="22" Margin="10,46,75,0" TextWrapping="Wrap" VerticalAlignment="Top" />
         <Button Content="Go" HorizontalAlignment="Right" Margin="0,46,10,0" VerticalAlignment="Top" Width="65" Height="26" FontSize="12" />
