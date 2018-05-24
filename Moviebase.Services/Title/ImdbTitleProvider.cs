@@ -20,7 +20,7 @@ namespace Moviebase.Services.Title
 
         public async Task<string> GuessTitle(string filename)
         {
-            await Task.Yield(); // TODO: is this the right usage of Task.Yield()?
+            await Task.Yield();
             var matched = _imdbRegex.Match(filename);
             return matched.Success ? matched.Value : null;
         }

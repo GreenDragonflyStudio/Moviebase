@@ -84,8 +84,8 @@
     <Reference Include="MahApps.Metro, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.6.4\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
-    <Reference Include="MahApps.Metro.IconPacks, Version=2.2.0.12, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.IconPacks.2.2.0\lib\net45\MahApps.Metro.IconPacks.dll</HintPath>
+    <Reference Include="MahApps.Metro.IconPacks.Material, Version=2.2.0.12, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.IconPacks.Material.2.2.0\lib\net45\MahApps.Metro.IconPacks.Material.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -121,6 +121,12 @@
     <Compile Include="Views\FolderViewModel.cs" />
     <Compile Include="Views\HomeViewModel.cs" />
     <Compile Include="Helper\MenuItem.cs" />
+    <Compile Include="Views\Settings\SettingIntegration.xaml.cs">
+      <DependentUpon>SettingIntegration.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\SettingConnectionView.xaml.cs">
+      <DependentUpon>SettingConnectionView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\SettingsViewModel.cs" />
     <Compile Include="Views\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
@@ -145,6 +151,14 @@
     </Compile>
     <Compile Include="Views\SyncViewModel.cs" />
     <Page Include="Theme\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\SettingIntegration.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\SettingConnectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -225,10 +239,6 @@
     <ProjectReference Include="..\MovieBase.Core\Moviebase.Core.csproj">
       <Project>{59edb2f5-6d53-4540-80cc-1e7ba7ed8a31}</Project>
       <Name>Moviebase.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Moviebase.DAL\Moviebase.DAL.csproj">
-      <Project>{90394018-92BA-45D8-8BB3-ABBF2BE9F84C}</Project>
-      <Name>Moviebase.DAL</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

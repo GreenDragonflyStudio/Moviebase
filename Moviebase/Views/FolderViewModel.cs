@@ -1,5 +1,4 @@
-﻿using Moviebase.DAL.Entities;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 
 namespace Moviebase.ViewModels
 {
@@ -20,6 +19,6 @@ namespace Moviebase.ViewModels
             }
         }
 
-        public ObservableCollection<Folder> Folders { get; set; }
+        public ObservableCollection<Models.MovieFolder> Folders { get; set; }
     }
 }

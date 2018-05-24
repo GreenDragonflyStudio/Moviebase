@@ -11,8 +11,8 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="659" />
         </Grid.ColumnDefinitions>
-        <TabControl x:Name="listBox" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" mah:TabControlHelper.Underlined="SelectedTabItem" mah:TabControlHelper.IsUnderlined="True" TabStripPlacement="Top">
-            <TabItem Header="Accounts">
+        <TabControl x:Name="listBox" mah:TabControlHelper.Underlined="SelectedTabItem" mah:TabControlHelper.IsUnderlined="True" TabStripPlacement="Top">
+            <TabItem Header="Connection">
                 <Grid />
             </TabItem>
             <TabItem Header="Integration">

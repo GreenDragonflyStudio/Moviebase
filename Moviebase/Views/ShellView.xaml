@@ -143,7 +143,7 @@
 
                             <i:Material Kind="Bell" />
                         </Button>
-                </mah:Badged>
+                    </mah:Badged>
                     <mah:Badged  Grid.Column="1"  Badge="{Binding UnsyncedCollection.Count, Converter={StaticResource ZeroToNullConverter}, Mode=OneWay}" BadgePlacementMode="TopLeft">
                         <Button Command="{Binding NavigateCommand}" CommandParameter="Views/SynchronizeView.xaml" Content="{i:Material Sync}" />
                     </mah:Badged>

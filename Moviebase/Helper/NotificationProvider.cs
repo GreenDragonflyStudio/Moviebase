@@ -1,17 +1,17 @@
-﻿using Moviebase.DAL.Entities;
+﻿using Moviebase.Models;
 using System.Collections.ObjectModel;
 
 namespace Moviebase.Helper
 {
     public static class NotificationProvider
     {
-        public static ObservableCollection<Notification> Notifications = new ObservableCollection<Notification>();
+        public static ObservableCollection<NotificationItem> Notifications = new ObservableCollection<NotificationItem>();
 
-        public static ObservableCollection<Movie> UnsyncedData = new ObservableCollection<Movie>();
+        public static ObservableCollection<MovieItem> UnsyncedData = new ObservableCollection<MovieItem>();
 
         internal static void Notify(string msg, int prior = 1)
         {
-            Notifications.Add(new Notification() { Message = msg, Priority = prior });
+            Notifications.Add(new NotificationItem() { Message = msg, Priority = prior });
         }
 
         internal static int Count()
@@ -21,7 +21,7 @@ namespace Moviebase.Helper
 
         internal static void Clear(int v)
         {
-            var a = new Notification[Notifications.Count];
+            var a = new NotificationItem[Notifications.Count];
             Notifications.CopyTo(a, 0);
             for (int i = 0; i < a.Length; i++)
             {

@@ -1,6 +1,6 @@
 ﻿using MahApps.Metro.IconPacks;
-using Moviebase.DAL.Entities;
 using Moviebase.Helper;
+using Moviebase.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -27,7 +27,6 @@ namespace Moviebase.ViewModels
             this.OptionsMenu.Add(new MenuItem() { Icon = new PackIconMaterial() { Kind = PackIconMaterialKind.Settings }, Text = "Settings", NavigationDestination = new Uri("Views/SettingsView.xaml", UriKind.RelativeOrAbsolute) });
             this.OptionsMenu.Add(new MenuItem() { Icon = new PackIconMaterial() { Kind = PackIconMaterialKind.Help }, Text = "About", NavigationDestination = new Uri("Views/AboutView.xaml", UriKind.RelativeOrAbsolute) });
 
-            NotificationProvider.Notify("Hello World");
             NotificationProvider.Notify("[Ongoing] Antman & the Wasp", 2);
         }
 
@@ -43,16 +42,16 @@ namespace Moviebase.ViewModels
 
         private static readonly ObservableCollection<MenuItem> AppMenu = new ObservableCollection<MenuItem>();
         private static readonly ObservableCollection<MenuItem> AppOptionsMenu = new ObservableCollection<MenuItem>();
-        private ObservableCollection<Notification> AppNotification = new ObservableCollection<Notification>();
-        private static readonly ObservableCollection<Movie> UnsyncedMovies = new ObservableCollection<Movie>();
-        private readonly ObservableCollection<Movie> Folders = new ObservableCollection<Movie>();
+        private ObservableCollection<NotificationItem> AppNotification = new ObservableCollection<NotificationItem>();
+        private static readonly ObservableCollection<Models.MovieItem> UnsyncedMovies = new ObservableCollection<Models.MovieItem>();
+        private readonly ObservableCollection<Models.MovieFolder> Folders = new ObservableCollection<Models.MovieFolder>();
 
         public string NotificationCount
         {
             get => (NotificationProvider.Count() == 0 ? "" : NotificationProvider.Count().ToString());
         }
 
-        public ObservableCollection<Notification> NotificationCollection
+        public ObservableCollection<NotificationItem> NotificationCollection
         {
             get
             {
@@ -65,7 +64,7 @@ namespace Moviebase.ViewModels
             }
         }
 
-        public ObservableCollection<Movie> UnsyncedCollection
+        public ObservableCollection<MovieItem> UnsyncedCollection
         {
             get
             {
