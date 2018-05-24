@@ -92,6 +92,7 @@ namespace Moviebase.Core.Components.TitleCleaner
             {
                 Year = maybeYear
             };
+
             // TODO : Change to Regex
             if (title.Count(x => x == '-') == 1)
             {

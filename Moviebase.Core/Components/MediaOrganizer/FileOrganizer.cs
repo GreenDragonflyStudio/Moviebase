@@ -9,9 +9,15 @@ namespace Moviebase.Core.Components.MediaOrganizer
 {
     public class FileOrganizer : IFileOrganizer
     {
+        #region Fields
+
         private static readonly ILog Log = LogManager.GetLogger(typeof(FileOrganizer));
-        private string _renameTemplate;
         private readonly IFolderCleaner _cleaner;
+        private string _renameTemplate;
+
+        #endregion Fields
+
+        #region Constructors
 
         internal FileOrganizer(string destinationFolder, string renameTemplate, IFolderCleaner cleaner)
         {
@@ -19,6 +25,13 @@ namespace Moviebase.Core.Components.MediaOrganizer
             _renameTemplate = renameTemplate;
             _cleaner = cleaner;
         }
+
+        #endregion Constructors
+
+        #region Properties
+
+        public static string DefaultTemplate => string.Format("{0}\\{1}\\({2}) {1}.{3}",
+            Tokens.Collection, Tokens.Title, Tokens.Year, Tokens.Extension);
 
         public string DestinationFolder { get; }
 
@@ -36,8 +49,9 @@ namespace Moviebase.Core.Components.MediaOrganizer
             }
         }
 
-        public static string DefaultTemplate => string.Format("{0}\\{1}\\({2}) {1}.{3}",
-            Tokens.Collection, Tokens.Title, Tokens.Year, Tokens.Extension);
+        #endregion Properties
+
+        #region Methods
 
         public string Organize(FileInfo itemPath, Movie movie)
         {
@@ -58,37 +72,6 @@ namespace Moviebase.Core.Components.MediaOrganizer
             return targetPath;
         }
 
-        private static bool IsTemplateValid(string value)
-        {
-            var tokens = new[] { Tokens.Title, Tokens.Extension, Tokens.Year, Tokens.Collection, Tokens.Genre };
-            var val = value;
-
-            foreach (var token in tokens)
-                val = val.Replace(token, string.Empty);
-
-            return !val.Contains("%");
-        }
-
-        private string GetRenamedPath(FileInfo item, Movie movie)
-        {
-            var fren = RenameTemplate;
-            fren = fren.Replace(Tokens.Title, movie.Title);
-            fren = fren.Replace(Tokens.Year, movie.Year?.ToString() ?? string.Empty);
-            fren = fren.Replace(Tokens.Collection, movie.Collection);
-            fren = fren.Replace(Tokens.Extension, item.Extension);
-            fren = fren.Replace(Tokens.Genre, movie.Genres.FirstOrDefault()?.Name);
-            fren = fren.Replace(Tokens.AllGenres, string.Join(",", movie.Genres.Select(x => x.Name)));
-
-            while (fren.Contains(@"\\"))
-            {
-                fren = fren.Replace(@"\\", @"\");
-            }
-
-            var frenamed = CleanFileName(fren);
-
-            return frenamed;
-        }
-
         private static string CleanFileName(string fileName)
         {
             var pathTokens = fileName.Split(new[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
@@ -99,6 +82,17 @@ namespace Moviebase.Core.Components.MediaOrganizer
                 .Aggregate(token, (current, c) => current.Replace(c.ToString(), string.Empty));
             }
             return string.Join("\\", pathTokens);
+        }
+
+        private static bool IsTemplateValid(string value)
+        {
+            var tokens = new[] { Tokens.Title, Tokens.Extension, Tokens.Year, Tokens.Collection, Tokens.Genre };
+            var val = value;
+
+            foreach (var token in tokens)
+                val = val.Replace(token, string.Empty);
+
+            return !val.Contains("%");
         }
 
         private static string SafeAddSuffix(string fullPath)
@@ -124,14 +118,44 @@ namespace Moviebase.Core.Components.MediaOrganizer
             return newFullPath;
         }
 
+        private string GetRenamedPath(FileInfo item, Movie movie)
+        {
+            var fren = RenameTemplate;
+            fren = fren.Replace(Tokens.Title, movie.Title);
+            fren = fren.Replace(Tokens.Year, movie.Year?.ToString() ?? string.Empty);
+            fren = fren.Replace(Tokens.Collection, movie.Collection);
+            fren = fren.Replace(Tokens.Extension, item.Extension);
+            fren = fren.Replace(Tokens.Genre, movie.Genres.FirstOrDefault()?.Name);
+            fren = fren.Replace(Tokens.AllGenres, string.Join(",", movie.Genres.Select(x => x.Name)));
+
+            while (fren.Contains(@"\\"))
+            {
+                fren = fren.Replace(@"\\", @"\");
+            }
+
+            var frenamed = CleanFileName(fren);
+
+            return frenamed;
+        }
+
+        #endregion Methods
+
+        #region Classes
+
         public static class Tokens
         {
+            #region Fields
+
+            public const string AllGenres = "%allgenres%";
+            public const string Collection = "%collection%";
+            public const string Extension = "%ext%";
+            public const string Genre = "%firstgenre%";
             public const string Title = "%title%";
             public const string Year = "%year%";
-            public const string Extension = "%ext%";
-            public const string Collection = "%collection%";
-            public const string Genre = "%firstgenre%";
-            public const string AllGenres = "%allgenres%";
+
+            #endregion Fields
         }
+
+        #endregion Classes
     }
 }

@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Moviebase.Core.Components.MediaAnalyzer
 {
-    public sealed class FileRef
+    public sealed class FileRef : IEquatable<FileRef>
     {
         #region Constructors
 

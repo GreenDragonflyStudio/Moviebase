@@ -14,7 +14,7 @@ namespace Moviebase.Core.Components.MediaScanner
 
             if (File.Exists(str))
                 return new[] { new FileInfo(str) };
-            if (Utils.FilesystemTools.IsDirectory(str) && (Directory.Exists(str))
+            if (Utils.FilesystemTools.IsDirectory(str) && Directory.Exists(str))
             {
                 var ff = Directory.GetFiles(str, "*.mkv", SearchOption.AllDirectories)
                     .Union(Directory.GetFiles(str, "*.avi", SearchOption.AllDirectories))

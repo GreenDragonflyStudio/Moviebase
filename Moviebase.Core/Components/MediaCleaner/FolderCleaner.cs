@@ -1,11 +1,19 @@
-using Moviebase.Core.Utils;
+using log4net;
 using System.IO;
 
 namespace Moviebase.Core.Components.MediaOrganizer
 {
-    public static class DirectoryCleaner
+    public class FolderCleaner : IFolderCleaner
     {
-        public static int CleanUp(DirectoryInfo directory)
+        private static readonly ILog Log = LogManager.GetLogger(typeof(FolderCleaner));
+
+        public void Clean(DirectoryInfo directory)
+        {
+            var deletes = CleanDirectory(directory);
+            Log.DebugFormat("Directory Cleaned: {0} ({1} parents deleted)", directory, deletes - 1);
+        }
+
+        public static int CleanDirectory(DirectoryInfo directory)
         {
             var deleted = 0;
             if (directory.Exists)
@@ -25,9 +33,9 @@ namespace Moviebase.Core.Components.MediaOrganizer
             return deleted;
         }
 
-        public static int CleanUp(string directory)
+        public static int CleanDirectory(string directory)
         {
-            return CleanUp(new DirectoryInfo(directory));
+            return CleanDirectory(new DirectoryInfo(directory));
         }
     }
 }
