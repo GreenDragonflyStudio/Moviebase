@@ -54,7 +54,7 @@ namespace Moviebase.Core.Components.TitleCleaner
             for (var i = 0; i < tokens.Length; i++)
             {
                 var tok = tokens[i];
-                if (ReservedWords.Any(x => tok.StartsWith(x, StringComparison.OrdinalIgnoreCase))) // string.Equals(x, tok, StringComparison.OrdinalIgnoreCase)))
+                if (ReservedWords.Any(x => tok.StartsWith(x, StringComparison.OrdinalIgnoreCase)))
                 {
                     if (title.Length > 0)
                         break;
@@ -66,7 +66,6 @@ namespace Moviebase.Core.Components.TitleCleaner
             }
             temp = title;
 
-            // Remove languages infos when are found before special markers (should not remove "English" if it's inside the title)
             tokens = temp.Split(SpaceChars, StringSplitOptions.RemoveEmptyEntries);
             for (var i = tokens.Length - 1; i >= 0; i--)
             {
@@ -89,12 +88,11 @@ namespace Moviebase.Core.Components.TitleCleaner
                     title = title.Replace(last, string.Empty).Trim();
                 }
             }
-
-            // TODO : review this. when there's one dash separates main title from subtitle
             var res = new MovieTitleCleanerResult
             {
                 Year = maybeYear
             };
+            // TODO : Change to Regex
             if (title.Count(x => x == '-') == 1)
             {
                 var sp = title.Split('-');
