@@ -58,18 +58,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiSettings.cs" />
-    <Compile Include="Components\MediaAnalyzer\AnalyzedItem.cs" />
+    <Compile Include="Models\AnalyzedItem.cs" />
     <Compile Include="Components\MediaAnalyzer\FileAnalyzer.cs" />
     <Compile Include="Components\MediaAnalyzer\FileRef.cs" />
-    <Compile Include="Components\MediaAnalyzer\IFileAnalyzer.cs" />
-    <Compile Include="Components\MediaOrganizer\DirectoryCleaner.cs" />
+    <Compile Include="Interfaces\IFileAnalyzer.cs" />
     <Compile Include="Components\MediaOrganizer\FileOrganizer.cs" />
-    <Compile Include="Components\MediaOrganizer\FolderCleaner.cs" />
-    <Compile Include="Components\MediaOrganizer\IFileOrganizer.cs" />
+    <Compile Include="Components\MediaCleaner\FolderCleaner.cs" />
+    <Compile Include="Interfaces\IFileOrganizer.cs" />
+    <Compile Include="Interfaces\IFolderCleaner.cs" />
     <Compile Include="Components\MediaScanner\BasicFileScanner.cs" />
-    <Compile Include="Components\MediaScanner\IFileScanner.cs" />
-    <Compile Include="Components\TitleCleaner\MovieTitleCleaner.cs" />
-    <Compile Include="Components\TitleCleaner\MovieTitleCleanerResult.cs" />
+    <Compile Include="Interfaces\IFileScanner.cs" />
+    <Compile Include="Components\MediaCleaner\MovieTitleCleaner.cs" />
+    <Compile Include="Models\MovieTitleCleanerResult.cs" />
     <Compile Include="Interfaces\IConfigReader.cs" />
     <Compile Include="Interfaces\IMovieDb.cs" />
     <Compile Include="Models\MatchFoundEventArgs.cs" />
@@ -98,6 +98,9 @@
     <Content Include="x86\MediaInfo.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Components\TitleCleaner\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MediaInfo.Native.17.12\build\MediaInfo.Native.targets" Condition="Exists('..\packages\MediaInfo.Native.17.12\build\MediaInfo.Native.targets')" />
