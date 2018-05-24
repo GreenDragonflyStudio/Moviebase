@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Moviebase.Services.Helpers;
+using Newtonsoft.Json;
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Moviebase.Services.Helpers;
-using Newtonsoft.Json;
 
 namespace Moviebase.Services.Title
 {

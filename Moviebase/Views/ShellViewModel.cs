@@ -1,9 +1,9 @@
 ﻿using MahApps.Metro.IconPacks;
+using Moviebase.DAL.Entities;
 using Moviebase.Helper;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Moviebase.DAL.Entities;
 
 namespace Moviebase.ViewModels
 {

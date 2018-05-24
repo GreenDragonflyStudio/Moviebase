@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Moviebase.Services.Entities;
+using Moviebase.Services.Entities.Internals;
+using Moviebase.Services.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Moviebase.Services.Entities;
-using Moviebase.Services.Entities.Internals;
-using Moviebase.Services.Helpers;
 
 namespace Moviebase.Services.Metadata
 {
@@ -114,7 +114,7 @@ namespace Moviebase.Services.Metadata
 
         private List<string> ParseAlternatives(MovieDetailsRoot root)
         {
-            var combined = new List<string> {root.title};
+            var combined = new List<string> { root.title };
             combined.AddRange(root.alternative_titles.titles.Select(x => x.title));
             return combined;
         }

@@ -1,6 +1,6 @@
-﻿using Moviebase.Helper;
+﻿using Moviebase.DAL.Entities;
+using Moviebase.Helper;
 using System.Collections.ObjectModel;
-using Moviebase.DAL.Entities;
 
 namespace Moviebase.ViewModels
 {

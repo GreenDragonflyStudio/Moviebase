@@ -1,5 +1,5 @@
-﻿using System.Collections.ObjectModel;
-using Moviebase.DAL.Entities;
+﻿using Moviebase.DAL.Entities;
+using System.Collections.ObjectModel;
 
 namespace Moviebase.ViewModels
 {

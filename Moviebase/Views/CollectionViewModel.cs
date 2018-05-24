@@ -1,9 +1,9 @@
-﻿using Moviebase.Helper;
+﻿using Moviebase.DAL.Entities;
+using Moviebase.Helper;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Threading;
-using Moviebase.DAL.Entities;
 
 namespace Moviebase.ViewModels
 {

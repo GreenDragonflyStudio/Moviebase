@@ -1,5 +1,4 @@
-﻿
-// ReSharper disable InconsistentNaming
+﻿// ReSharper disable InconsistentNaming
 namespace Moviebase.Services.Entities.Internals
 {
     public class Genre

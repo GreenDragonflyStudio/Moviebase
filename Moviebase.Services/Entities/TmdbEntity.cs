@@ -12,7 +12,7 @@ namespace Moviebase.Services.Entities
         public DateTime ReleaseDate { get; set; }
         public string Genre { get; set; }
         public string Plot { get; set; }
-        
+
         public List<string> AlternativeNames { get; set; }
         public List<string> PosterPath { get; set; }
     }

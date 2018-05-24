@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data.Entity;
-using SQLite.CodeFirst;
 
 namespace Moviebase.DAL
 {
