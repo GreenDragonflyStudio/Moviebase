@@ -1,7 +1,6 @@
 ﻿using MahApps.Metro.IconPacks;
 using Moviebase.Core.Models;
 using Moviebase.Helper;
-using Moviebase.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -44,8 +43,8 @@ namespace Moviebase.ViewModels
         private static readonly ObservableCollection<MenuItem> AppMenu = new ObservableCollection<MenuItem>();
         private static readonly ObservableCollection<MenuItem> AppOptionsMenu = new ObservableCollection<MenuItem>();
         private ObservableCollection<NotificationItem> AppNotification = new ObservableCollection<NotificationItem>();
-        private static readonly ObservableCollection<Models.MovieItem> UnsyncedMovies = new ObservableCollection<Models.MovieItem>();
-        private readonly ObservableCollection<Models.MovieFolder> Folders = new ObservableCollection<Models.MovieFolder>();
+        private static readonly ObservableCollection<MediaFile> UnsyncedMovies = new ObservableCollection<MediaFile>();
+        private readonly ObservableCollection<MediaFolder> Folders = new ObservableCollection<MediaFolder>();
 
         public string NotificationCount
         {

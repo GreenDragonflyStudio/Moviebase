@@ -13,7 +13,7 @@ namespace Moviebase.DAL
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             var sqliteConnectionInitializer = new MoviebaseContextInitializer(modelBuilder);
-            Database.SetInitializer(sqliteConnectionInitializer);
+            //  Database.SetInitializer(sqliteConnectionInitializer)
         }
     }
 }

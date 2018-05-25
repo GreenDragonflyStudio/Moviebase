@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using Moviebase.Core.Models;
+using System.Collections.ObjectModel;
 
 namespace Moviebase.ViewModels
 {
