@@ -19,6 +19,6 @@ namespace Moviebase.ViewModels
             }
         }
 
-        public ObservableCollection<Models.MovieFolder> Folders { get; set; }
+        public ObservableCollection<MediaFolder> Folders { get; set; }
     }
 }

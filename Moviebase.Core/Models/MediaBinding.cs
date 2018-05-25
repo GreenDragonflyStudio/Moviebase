@@ -7,6 +7,7 @@ namespace Moviebase.Core.Models
         public string Hash { get; set; }
 
         public Movie Movie { get; set; }
+        public string[] Subtitles { get; set; }
         public int? MovieId { get; set; }
 
         #endregion Properties

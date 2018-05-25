@@ -1,4 +1,5 @@
 ﻿using MahApps.Metro.IconPacks;
+using Moviebase.Core.Models;
 using Moviebase.Helper;
 using Moviebase.Models;
 using System;
@@ -60,19 +61,6 @@ namespace Moviebase.ViewModels
             set
             {
                 NotificationProvider.Notifications = value;
-                OnPropertyChanged("NotificationCollection");
-            }
-        }
-
-        public ObservableCollection<MovieItem> UnsyncedCollection
-        {
-            get
-            {
-                return NotificationProvider.UnsyncedData;
-            }
-            set
-            {
-                NotificationProvider.UnsyncedData = value;
                 OnPropertyChanged("NotificationCollection");
             }
         }

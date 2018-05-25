@@ -16,4 +16,9 @@ namespace Moviebase.Core.Models
 
         #endregion Properties
     }
+
+    public class MediaFoler
+    {
+        public string Path { get; set; }
+    }
 }

@@ -1,4 +1,4 @@
-﻿using Moviebase.Models;
+﻿using Moviebase.Core.Models;
 using System.Collections.ObjectModel;
 
 namespace Moviebase.Helper
@@ -7,7 +7,7 @@ namespace Moviebase.Helper
     {
         public static ObservableCollection<NotificationItem> Notifications = new ObservableCollection<NotificationItem>();
 
-        public static ObservableCollection<MovieItem> UnsyncedData = new ObservableCollection<MovieItem>();
+        //public static ObservableCollection<MovieItem> UnsyncedData = new ObservableCollection<MovieItem>();
 
         internal static void Notify(string msg, int prior = 1)
         {

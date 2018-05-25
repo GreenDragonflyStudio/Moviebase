@@ -1,5 +1,5 @@
-﻿using Moviebase.Helper;
-using Moviebase.Models;
+﻿using Moviebase.Core.Models;
+using Moviebase.Helper;
 using System.Collections.ObjectModel;
 
 namespace Moviebase.ViewModels
