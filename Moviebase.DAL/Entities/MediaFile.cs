@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Moviebase.DAL.Entities
 {
-    public class MediaFile
+    public class MediaFile : IEquatable<MediaFile>
     {
         public int Id { get; set; }
 
@@ -15,10 +15,6 @@ namespace Moviebase.DAL.Entities
         public DateTime LastSync { get; set; }
         public string FullPath { get; set; }
         public bool Synced { get; set; }
-
-        public MediaFile()
-        {
-        }
         
         public bool Equals(MediaFile other)
         {
@@ -31,7 +27,7 @@ namespace Moviebase.DAL.Entities
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((MediaFile)obj);
         }
 
