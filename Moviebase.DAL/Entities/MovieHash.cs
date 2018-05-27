@@ -6,6 +6,5 @@
 
         public int MovieId { get; set; }
         public string Hash { get; set; }
-        public string DirtyFileName { get; set; }
     }
 }
