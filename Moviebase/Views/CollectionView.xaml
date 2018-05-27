@@ -7,11 +7,15 @@
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:vm="clr-namespace:Moviebase.ViewModels"
              xmlns:i="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:converters="clr-namespace:Moviebase.Converters"
              mc:Ignorable="d"
              d:DesignHeight="432.353" d:DesignWidth="586.667">
     <UserControl.DataContext>
         <vm:CollectionViewModel />
     </UserControl.DataContext>
+    <UserControl.Resources>
+        <converters:GenresToStringConverter x:Key="GenresToStringConverter" />
+    </UserControl.Resources>
     <Grid>
         <Grid.Resources>
             <!--  for the azure style  -->
@@ -59,12 +63,12 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Title" Binding="{Binding Title}" MinWidth="130" />
                             <DataGridTextColumn Header="Year" Binding="{Binding Year}"  Width="60" CanUserResize="False" />
-                            <DataGridTextColumn Header="Genre" Binding="{Binding Genre}"  MinWidth="80" />
-                            <DataGridTextColumn Header="Rating" Binding="{Binding Rating}"  MinWidth="70" />
-                            <DataGridTextColumn Header="Synced" Binding="{Binding Synced}" MinWidth="70" />
+                            <DataGridTextColumn Header="Genre" Binding="{Binding Genres, Converter={StaticResource GenresToStringConverter}}"  MinWidth="80" />
+                            <DataGridTextColumn Header="Rating" Binding="{Binding OriginalLanguage}"  MinWidth="70" />
+                            <DataGridTextColumn Header="Synced" Binding="{Binding VoteCount}" MinWidth="70" />
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Button Content="Add" HorizontalAlignment="Left" Width="72" Height="28" VerticalAlignment="Top" />
+                    <Button Content="Add" HorizontalAlignment="Left" Width="72" Height="28" VerticalAlignment="Top" Command="{Binding AddCommand}" />
                     <Button Content="Remove" HorizontalAlignment="Right" Width="72" Height="28" VerticalAlignment="Top" />
                     <Image x:Name="image" HorizontalAlignment="Left" Width="132" Height="131" VerticalAlignment="Bottom" />
                 </Grid>

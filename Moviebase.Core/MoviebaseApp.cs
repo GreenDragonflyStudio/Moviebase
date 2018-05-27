@@ -1,194 +1,181 @@
 ﻿using log4net;
-using Moviebase.Core.Components;
-using Moviebase.Core.Interfaces;
-using Moviebase.Core.Models;
-using Moviebase.Core.Utils.Algorithms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using LiteDB;
+using Moviebase.Core.Components;
+using Moviebase.Core.Utils;
+using Moviebase.DAL;
+using Moviebase.DAL.Entities;
+using Moviebase.Services.Metadata;
+using Ninject;
 using TMDbLib.Client;
-using Movie = TMDbLib.Objects.Movies.Movie;
+using TMDbLib.Objects.Find;
+using TMDbLib.Objects.Search;
 
 namespace Moviebase.Core
 {
     public sealed class MoviebaseApp
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(MoviebaseApp));
-
-        private readonly IFileAnalyzer _analyzer;
+        
         private readonly TMDbClient _apiClient;
-        private readonly IMovieDb _db;
         private readonly IFileScanner _fileScanner;
+        private readonly IFileAnalyzer _analyzer;
+        private readonly IFileOrganizer _fileOrganizer;
 
-        public MoviebaseApp(IConfigReader configReader, IFileScanner fileScanner, IFileAnalyzer analyzer, IMovieDb db)
+        public event EventHandler<MatchFoundEventArgs> MatchFound;
+        public event ProgressChangedEventHandler ProgressChanged;
+
+        public MoviebaseApp(IFileScanner fileScanner, IFileAnalyzer analyzer, IFileOrganizer organizer)
         {
             _fileScanner = fileScanner;
             _analyzer = analyzer;
-            _db = db;
+            _fileOrganizer = organizer;
 
-            ApiSettings apiSettings = configReader.GetApiSettings();
-            if (apiSettings == null)
+            _apiClient = new TMDbClient(GlobalSettings.Default.ApiKey)
             {
-                throw new ArgumentNullException("configReader", "Argument not valid, Please provide ApiSettings");
-            }
-            _apiClient = new TMDbClient(apiSettings.ApiKey)
-            {
-                DefaultCountry = "ID",
-                DefaultLanguage = "Id"
+                DefaultLanguage = "id",
+                DefaultCountry = "ID"
             };
         }
-
-        public event EventHandler<MatchFoundEventArgs> MatchFound;
-
-        public event ProgressChangedEventHandler ProgressChanged;
-
-        public Task<int> ScanAsync(MoviebaseSettings settings)
+        
+        public async Task<IEnumerable<Movie>> ScanAsync(string scanPath)
         {
-            var tf = new TaskFactory<int>();
-            return tf.StartNew(() => Scan(settings));
-        }
+            var files = _fileScanner.Scan(scanPath).ToList();
+            var totalItems = files.Count;
+            var identified = new List<Movie>();
 
-        public int Scan(MoviebaseSettings settings)
-        {
-            var count = 0;
-            var index = 0;
-
-            var files = _fileScanner.Scan().ToArray();
-            var totalItems = files.Length;
-
-            foreach (var file in files)
+            for (var index = 0; index < files.Count; index++)
             {
-                index++;
-                OnProgressChanged(index, totalItems);
+                var file = files[index];
+                var item = await _analyzer.Analyze(file);
 
-                var item = _analyzer.Analyze(file);
                 if (!item.IsKnown)
                 {
-                    var res = TryIdentify(item, out float accuracy);
-                    if (res != null)
-                    {
-                        var args = new MatchFoundEventArgs(item, res, accuracy);
-                        OnMatchFound(args);
+                    var res = await TryIdentify(item);
+                    if (res == null) continue;
 
-                        if (args.Cancel)
-                        {
-                            break;
-                        }
+                    var args = new MatchFoundEventArgs(file, item.Title, res.Item2);
+                    OnMatchFound(args);
+                    if (args.Cancel) break;
 
-                        if (args.IsMatch == true)
-                        {
-                            DoRename(args, settings);
-
-                            UpdateItem(item, res);
-                            count++;
-                        }
-                    }
+                    identified.Add(res.Item1);
                 }
                 else
                 {
-                    var movieId = _db.GetMovieIdFor(item);
-                    var movie = _db.GetMovie(movieId.Value);
-                    item.Title = movie.Title;
-                    item.Year = movie.Year;
-
-                    var res = TryIdentify(item, out float accuracy);
-                    var args = new MatchFoundEventArgs(item, res, 1);
-                    DoRename(args, settings);
+                    using (var db = new LiteDatabase(GlobalSettings.Default.ConnectionString))
+                    {
+                        var movieCollection = db.GetCollection<Movie>();
+                        var movie = movieCollection.FindOne(x => x.Id == item.MovieId);
+                        identified.Add(movie);
+                    }
                 }
+
+                OnProgressChanged(index, totalItems);
             }
 
-            return count;
+            return identified;
         }
 
-        private static void DoRename(MatchFoundEventArgs args, MoviebaseSettings settings)
-        {
-            if (settings.Reorganize)
-            {
-                var sourcePath = args.LocalFile.Path;
-                IFolderCleaner cleaner = settings.DeleteEmptyFolders ? new FolderCleaner() : null;
-                var organizer = new FileOrganizer(settings.TargetPath, settings.RenameTemplate, cleaner);
-                organizer.Organize(sourcePath, args.Movie);
-            }
-        }
-
-        private Models.Movie TryIdentify(AnalyzedItem item, out float matchAccuracy)
+        private async Task<Tuple<Movie, float>> TryIdentify(AnalyzedFile item)
         {
             Log.DebugFormat("Querying remote: {0} ({1})", item.Title, item.Year);
-            IEnumerable<string> tokens = new[] { item.Title };
-            var matches = new List<Movie>();
-            foreach (var token in tokens)
+            var matches = new List<TMDbLib.Objects.Movies.Movie>();
+            List<SearchMovie> listContainer;
+
+            if (!string.IsNullOrWhiteSpace(item.ImdbId))
             {
-                var results = _apiClient.SearchMovieAsync(token).Result;
-
-                Log.Debug($"Got {results.Results.Count:N0} of {results.TotalResults:N0} results");
-                foreach (var result in results.Results)
-                {
-                    Log.DebugFormat(" => {0}| {1} / {2} ({3})", result.Id, result.Title, result.OriginalTitle,
-                        result.ReleaseDate.GetValueOrDefault().Year);
-
-                    var movieTask = _apiClient.GetMovieAsync(result.Id);
-                    movieTask.Wait();
-                    var movie = movieTask.Result;
-
-                    matches.Add(movie);
-                }
-            }
-
-            var resChart = matches
-                .Select(x => new { Movie = MapDbItem(x), Match = GetMatch(x, item) })
-                .OrderByDescending(z => z.Match).ToArray();
-
-            var candidate = resChart.FirstOrDefault(x => x.Match >= 0.2f);
-            if (candidate != null)
-            {
-                matchAccuracy = candidate.Match;
-
-                _apiClient.GetConfig();
-                candidate.Movie.ImageUri = _apiClient.GetImageUrl("w185", candidate.Movie.PosterPath).ToString();
-
-                var movie = candidate.Movie;
-                _db.Push(movie);
-
-                _db.Push(item.Hash, movie.Id);
-
-                return movie;
+                // search by id
+                var results = await _apiClient.FindAsync(FindExternalSource.Imdb, item.ImdbId);
+                listContainer = results.MovieResults;
+                Log.Debug($"Got {results.MovieResults.Count:N0} of {results.MovieResults.Count:N0} results");
             }
             else
             {
-                matchAccuracy = 0f;
+                // search by title
+                var results = await _apiClient.SearchMovieAsync(item.Title);
+                listContainer = results.Results;
+                Log.Debug($"Got {results.Results.Count:N0} of {results.TotalResults:N0} results");
             }
 
-            return null;
+            // fetch movie
+            //foreach (var result in listContainer)
+            //{
+            //    Log.DebugFormat(" => {0}| {1} / {2} ({3})", result.Id, result.Title, result.OriginalTitle,
+            //        result.ReleaseDate.GetValueOrDefault().Year);
+
+            //    matches.Add(await _apiClient.GetMovieAsync(result.Id));
+            //}
+            
+            //// sort matches
+            //var resChart = matches
+            //    .Select(x => new
+            //    {
+            //        Movie = EntityMapperHelpers.MapMovieToEntity(x),
+            //        Match = GetMatch(x, item)
+            //    })
+            //    .OrderByDescending(z => z.Match).ToArray();
+
+            // get most candidate
+            var candidate = new
+            {
+                Movie = EntityMapperHelpers.MapMovieToEntity(await _apiClient.GetMovieAsync(listContainer.First().Id)),
+                Match = 1
+            };
+            //if (candidate == null) return null;
+
+            // find image URI
+            _apiClient.GetConfig();
+            candidate.Movie.ImageUri = _apiClient.GetImageUrl("w185", candidate.Movie.PosterPath).ToString();
+            candidate.Movie.FilePath = item.FullPath;
+
+            // save to db
+            using (var db = new LiteDatabase(GlobalSettings.Default.ConnectionString))
+            {
+                var movieCollection = db.GetCollection<Movie>();
+                movieCollection.Insert(candidate.Movie);
+            }
+            
+            return new Tuple<Movie, float>(candidate.Movie, candidate.Match);
         }
 
-        private static float GetMatch(Movie movie, AnalyzedItem item)
+        private void DoRename(string fullPath, Movie movie)
+        {
+            if (!GlobalSettings.Default.Reorganize) return;
+            
+            _fileOrganizer.Organize(fullPath, movie);
+        }
+
+        private float GetMatch(TMDbLib.Objects.Movies.Movie movie, AnalyzedFile item)
         {
             float res = 0;
 
-            var dtt = Distance.LevenshteinDistance(item.Title.ToLower(), movie.Title.ToLower());
-            var dto = Distance.LevenshteinDistance(item.Title.ToLower(), movie.OriginalTitle.ToLower());
+            var dtt = DamerauLevenshtein.Calculate(item.Title.ToLower(), movie.Title.ToLower());
+            var dto = DamerauLevenshtein.Calculate(item.Title.ToLower(), movie.OriginalTitle.ToLower());
             float score1 = Math.Max(0, 5 - Math.Min(dtt, dto));
             res += score1;
-
-            if (!string.IsNullOrEmpty(item.SubTitle))
-            {
-                var dst = Distance.LevenshteinDistance(item.SubTitle.ToLower(), movie.Title.ToLower());
-                var dso = Distance.LevenshteinDistance(item.SubTitle.ToLower(), movie.OriginalTitle.ToLower());
-                float score2 = Math.Max(0, 3 - Math.Min(dst, dso));
-                res += score2;
-            }
+            
+            //if (!string.IsNullOrEmpty(item.SubTitle))
+            //{
+            //    var dst = DamerauLevenshtein.Calculate(item.SubTitle.ToLower(), movie.Title.ToLower());
+            //    var dso = DamerauLevenshtein.Calculate(item.SubTitle.ToLower(), movie.OriginalTitle.ToLower());
+            //    float score2 = Math.Max(0, 3 - Math.Min(dst, dso));
+            //    res += score2;
+            //}
 
             if (LooksLike(item.Year, movie.ReleaseDate))
             {
                 res += 3;
             }
 
-            if (item.Duration > TimeSpan.Zero && movie.Runtime.HasValue)
+            var duration = TimeSpan.FromMilliseconds(MediaHelper.GetMediaInfo(item.FullPath).General.Duration);
+            if (duration > TimeSpan.Zero && movie.Runtime.HasValue)
             {
                 var mtime = TimeSpan.FromMinutes(movie.Runtime.Value);
-                var diff = Math.Abs(item.Duration.Subtract(mtime).TotalMinutes);
+                var diff = Math.Abs(duration.Subtract(mtime).TotalMinutes);
                 var score = (int)Math.Max(5 - diff, 0);
                 {
                     res += score;
@@ -202,45 +189,11 @@ namespace Moviebase.Core
             return res / 16;
         }
 
-        private static Models.Movie MapDbItem(Movie match)
+        private bool LooksLike(int? itemYear, DateTime? matchReleaseDate)
         {
-            var res = new Models.Movie
-            {
-                Id = match.Id,
-                Title = match.Title,
-                OriginalTitle = match.OriginalTitle,
-                ReleaseDate = match.ReleaseDate,
-                Overview = match.Overview,
-                Duration = TimeSpan.FromMinutes(match.Runtime.GetValueOrDefault()),
-                Adult = match.Adult,
-                Genres = match.Genres.Select(g => new MovieGenre { Id = g.Id, Name = g.Name }).ToArray(),
-                ImdbId = match.ImdbId,
-                OriginalLanguage = match.OriginalLanguage,
-                Popularity = match.Popularity,
-                PosterPath = match.PosterPath,
-                VoteAverage = match.VoteAverage,
-                VoteCount = match.VoteCount,
-                Collection = match.BelongsToCollection?.Name.Replace(" - Collezione", string.Empty)
-            };
-
-            ////   match.Similar
-            ////    match.Videos
-            return res;
-        }
-
-        private static bool LooksLike(int? itemYear, DateTime? matchReleaseDate)
-        {
-            if (itemYear.HasValue && matchReleaseDate.HasValue)
-            {
-                var yd = Math.Abs(itemYear.Value - matchReleaseDate.Value.Year);
-                return yd <= 1;
-            }
-            return false;
-        }
-
-        public void UpdateItem(AnalyzedItem item, Models.Movie res)
-        {
-            // Method intentionally left empty.
+            if (!itemYear.HasValue || !matchReleaseDate.HasValue) return false;
+            var yd = Math.Abs(itemYear.Value - matchReleaseDate.Value.Year);
+            return yd <= 1;
         }
 
         private void OnMatchFound(MatchFoundEventArgs e)
@@ -250,12 +203,11 @@ namespace Moviebase.Core
 
         private void OnProgressChanged(int current, int total)
         {
-            if (total > 0)
-            {
-                var p = 100 * current / total;
-                ProgressChangedEventArgs e = new ProgressChangedEventArgs(p, null);
-                ProgressChanged?.Invoke(this, e);
-            }
+            if (total <= 0) return;
+
+            var p = 100 * current / total;
+            var e = new ProgressChangedEventArgs(p, null);
+            ProgressChanged?.Invoke(this, e);
         }
     }
 }
