@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{FADEE4C9-D4A2-4DE4-980A-45193ABDA1EA}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>MovieBase</RootNamespace>
-    <AssemblyName>MovieBase</AssemblyName>
+    <RootNamespace>Moviebase</RootNamespace>
+    <AssemblyName>Moviebase</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -81,11 +81,17 @@
     <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net45\ControlzEx.dll</HintPath>
     </Reference>
+    <Reference Include="LiteDB, Version=4.0.0.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
+      <HintPath>..\packages\LiteDB.4.0.0\lib\net40\LiteDB.dll</HintPath>
+    </Reference>
     <Reference Include="MahApps.Metro, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.6.4\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
     <Reference Include="MahApps.Metro.IconPacks.Material, Version=2.2.0.12, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.IconPacks.Material.2.2.0\lib\net45\MahApps.Metro.IconPacks.Material.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -110,16 +116,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\GenresToStringConverter.cs" />
     <Compile Include="Converters\SelectedItemToContentConverter.cs" />
     <Compile Include="Converters\ZeroToNullConverter.cs" />
     <Compile Include="Helper\Navigation.cs" />
     <Compile Include="Helper\NotificationProvider.cs" />
-    <Compile Include="Views\AboutViewModel.cs" />
+    <Compile Include="ViewModels\AboutViewModel.cs" />
     <Compile Include="Helper\BindableBase.cs" />
-    <Compile Include="Views\CollectionViewModel.cs" />
+    <Compile Include="ViewModels\CollectionViewModel.cs" />
     <Compile Include="Helper\DelegateCommand.cs" />
-    <Compile Include="Views\FolderViewModel.cs" />
-    <Compile Include="Views\HomeViewModel.cs" />
+    <Compile Include="ViewModels\FolderViewModel.cs" />
+    <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="Helper\MenuItem.cs" />
     <Compile Include="Views\Settings\SettingIntegration.xaml.cs">
       <DependentUpon>SettingIntegration.xaml</DependentUpon>
@@ -127,7 +134,7 @@
     <Compile Include="Views\Settings\SettingConnectionView.xaml.cs">
       <DependentUpon>SettingConnectionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="Views\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
     </Compile>
@@ -149,7 +156,7 @@
     <Compile Include="Views\SynchronizeView.xaml.cs">
       <DependentUpon>SynchronizeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SyncViewModel.cs" />
+    <Compile Include="ViewModels\SyncViewModel.cs" />
     <Page Include="Theme\Generic.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -170,7 +177,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\ShellViewModel.cs" />
+    <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="Views\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -232,13 +239,15 @@
   <ItemGroup>
     <Resource Include="Properties\app.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModels\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\MovieBase.Core\Moviebase.Core.csproj">
       <Project>{59edb2f5-6d53-4540-80cc-1e7ba7ed8a31}</Project>
       <Name>Moviebase.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Moviebase.DAL\Moviebase.DAL.csproj">
+      <Project>{90394018-92BA-45D8-8BB3-ABBF2BE9F84C}</Project>
+      <Name>Moviebase.DAL</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

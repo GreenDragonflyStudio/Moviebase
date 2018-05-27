@@ -7,13 +7,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Moviebase"
         xmlns:viewModels ="clr-namespace:Moviebase.ViewModels"
-    xmlns:conv="clr-namespace:Moviebase.Converters"
     xmlns:views="clr-namespace:Moviebase.Views"
+    xmlns:converters="clr-namespace:Moviebase.Converters"
     mc:Ignorable="d"
         Title="Moviebase" Height="600" Width="700" IconEdgeMode="Unspecified" ShowIconOnTitleBar="False"
                       GlowBrush="{DynamicResource AccentColorBrush}" SnapsToDevicePixels="True" TitlebarHeight="32" ShowDialogsOverTitleBar="False" TitleAlignment="Center" IconBitmapScalingMode="NearestNeighbor"  MinWidth="700" MinHeight="600">
     <mah:MetroWindow.Resources>
-        <conv:ZeroToNullConverter x:Key="ZeroToNullConverter" />
+        <converters:ZeroToNullConverter x:Key="ZeroToNullConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </mah:MetroWindow.Resources>
     <mah:MetroWindow.Flyouts>

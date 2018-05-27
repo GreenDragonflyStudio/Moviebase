@@ -11,6 +11,8 @@
     <AssemblyName>Moviebase.Services</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MediaInfoDotNet, Version=0.7.79.40925, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MediaInfoDotNet.0.7.79.40925\lib\net45\MediaInfoDotNet.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -41,25 +46,19 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="TMDbLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TMDbLib.1.0.0\lib\net45\TMDbLib.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\Internals\AlternativeTitles.cs" />
-    <Compile Include="Entities\Internals\FindRoot.cs" />
-    <Compile Include="Entities\Internals\Genre.cs" />
-    <Compile Include="Entities\Internals\MovieDetailsRoot.cs" />
-    <Compile Include="Entities\Internals\MovieSearchResult.cs" />
-    <Compile Include="Entities\Internals\MovieSearchRoot.cs" />
-    <Compile Include="Entities\Internals\Poster.cs" />
-    <Compile Include="Entities\Internals\PosterFindRoot.cs" />
-    <Compile Include="Entities\Internals\PosterSize.cs" />
-    <Compile Include="Entities\Internals\Title.cs" />
-    <Compile Include="Entities\TmdbEntity.cs" />
     <Compile Include="Helpers\IOHelpers.cs" />
     <Compile Include="Helpers\HttpClientHelpers.cs" />
     <Compile Include="Helpers\ProcessHelper.cs" />
+    <Compile Include="Helpers\StringUtils.cs" />
+    <Compile Include="Metadata\DamerauLevenshtein.cs" />
     <Compile Include="Metadata\ISubscene.cs" />
-    <Compile Include="Metadata\ITmdb.cs" />
-    <Compile Include="Metadata\Tmdb.cs" />
+    <Compile Include="Title\TitleCleanerProvider.cs" />
+    <Compile Include="Entities\GuessTitle.cs" />
     <Compile Include="Title\CompositeTitleProvider.cs" />
     <Compile Include="Title\GuessitTitleProvider.cs" />
     <Compile Include="Title\ImdbTitleProvider.cs" />
@@ -67,7 +66,27 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
+    <None Include="MediaInfoDotNet.dll.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="x64\MediaInfo.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x86\MediaInfo.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\MediaInfo.Native.17.12\build\MediaInfo.Native.targets" Condition="Exists('..\packages\MediaInfo.Native.17.12\build\MediaInfo.Native.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\MediaInfo.Native.17.12\build\MediaInfo.Native.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MediaInfo.Native.17.12\build\MediaInfo.Native.targets'))" />
+  </Target>
 </Project>

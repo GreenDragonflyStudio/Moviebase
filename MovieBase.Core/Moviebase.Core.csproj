@@ -71,7 +71,6 @@
     <Compile Include="Components\MediaCleaner\MovieTitleCleaner.cs" />
     <Compile Include="Models\MovieTitleCleanerResult.cs" />
     <Compile Include="Interfaces\IConfigReader.cs" />
-    <Compile Include="Interfaces\IMovieDb.cs" />
     <Compile Include="Models\MatchFoundEventArgs.cs" />
     <Compile Include="Models\MediaBinding.cs" />
     <Compile Include="Models\MediaFile.cs" />

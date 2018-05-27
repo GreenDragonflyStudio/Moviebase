@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Moviebase.Services.Entities;
 
 namespace Moviebase.Services.Title
 {
@@ -7,14 +8,21 @@ namespace Moviebase.Services.Title
     {
         private readonly List<ITitleProvider> _providers = new List<ITitleProvider>();
 
+        public CompositeTitleProvider()
+        {
+            AddProvider(new ImdbTitleProvider());
+            AddProvider(new GuessitTitleProvider());
+            AddProvider(new TitleCleanerProvider());
+        }
+
         public void AddProvider(ITitleProvider provider)
         {
             _providers.Add(provider);
         }
 
-        public async Task<string> GuessTitle(string filename)
+        public async Task<GuessTitle> GuessTitle(string filename)
         {
-            string result = null;
+            GuessTitle result = null;
             foreach (var titleProvider in _providers)
             {
                 try
@@ -26,7 +34,7 @@ namespace Moviebase.Services.Title
                     result = null;
                 }
 
-                if (!string.IsNullOrWhiteSpace(result)) break;
+                if (!string.IsNullOrWhiteSpace(result?.ImdbId) || !string.IsNullOrWhiteSpace(result?.Title)) break;
             }
             return result;
         }

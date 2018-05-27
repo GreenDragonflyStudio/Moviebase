@@ -5,17 +5,29 @@ namespace Moviebase.DAL.Entities
 {
     public class Movie
     {
-        public int MovieId { get; set; }
+        public int Id { get; set; }
+
+        public int TmdbId { get; set; }
+        public string ImdbId { get; set; }
 
         public string Title { get; set; }
-        public DateTime ReleaseDate { get; set; }
-        public ICollection<Genre> Genres { get; set; }
-        public string Synopsis { get; set; }
-        public bool IsSerial { get; set; }
+        public DateTime? ReleaseDate { get; set; }
+        public int? Year => ReleaseDate?.Year;
+        public string Overview { get; set; }
 
-        public string ImagePath { get; set; }
-        public string SubtitlePath { get; set; }
-        public float Rating { get; set; }
-        public bool Synced { get; set; }
+        public bool Adult { get; set; }
+        public string Collection { get; set; }
+        public TimeSpan Duration { get; set; }
+        public IEnumerable<Genre> Genres { get; set; }
+
+        public string ImageUri { get; set; }
+        public string OriginalLanguage { get; set; }
+        public string OriginalTitle { get; set; }
+        public double Popularity { get; set; }
+        public double VoteAverage { get; set; }
+        public int VoteCount { get; set; }
+
+        public string FilePath { get; set; }
+        public string PosterPath { get; set; }
     }
 }
