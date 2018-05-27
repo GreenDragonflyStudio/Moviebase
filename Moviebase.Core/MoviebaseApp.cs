@@ -101,15 +101,15 @@ namespace Moviebase.Core
             }
 
             // get most candidate
+            var candidateMovieRaw = listContainer.Select(x => new {Raw = x, ApproxMatch = GetMatch(x, item)})
+                .OrderByDescending(x => x.ApproxMatch).FirstOrDefault();
+            if (candidateMovieRaw == null) return null;
             var candidate = new
             {
-                Movie = EntityMapperHelpers.MapMovieToEntity(await _apiClient.GetMovieAsync(listContainer.First().Id)),
-                Match = 1
+                Movie = MapMovieToEntity(await _apiClient.GetMovieAsync(candidateMovieRaw.Raw.Id)),
+                ApproximateMatch = candidateMovieRaw.ApproxMatch
             };
-
-            // find image URI
-            candidate.Movie.ImageUri = _apiClient.GetImageUrl("w185", candidate.Movie.PosterPath).ToString();
-
+            
             // save to db
             using (var db = new LiteDatabase(GlobalSettings.Default.ConnectionString))
             {
@@ -138,7 +138,7 @@ namespace Moviebase.Core
                 mediaCollection.Upsert(mediaEntity);
             }
             
-            return new Tuple<Movie, float>(candidate.Movie, candidate.Match);
+            return new Tuple<Movie, float>(candidate.Movie, candidate.ApproximateMatch);
         }
 
         private void DoRename(string fullPath, Movie movie)
@@ -148,43 +148,45 @@ namespace Moviebase.Core
             _fileOrganizer.Organize(fullPath, movie);
         }
 
-        private float GetMatch(TMDbLib.Objects.Movies.Movie movie, AnalyzedFile item)
+        private float GetMatch(SearchMovie movie, AnalyzedFile candidate)
         {
             float res = 0;
 
-            var dtt = DamerauLevenshtein.Calculate(item.Title.ToLower(), movie.Title.ToLower());
-            var dto = DamerauLevenshtein.Calculate(item.Title.ToLower(), movie.OriginalTitle.ToLower());
-            float score1 = Math.Max(0, 5 - Math.Min(dtt, dto));
-            res += score1;
-            
-            if (LooksLike(item.Year, movie.ReleaseDate))
+            var dtt = DamerauLevenshtein.Calculate(candidate.Title.ToUpper(), movie.Title.ToUpper());
+            var dto = DamerauLevenshtein.Calculate(candidate.Title.ToUpper(), movie.OriginalTitle.ToUpper());
+            res += Math.Max(0, 5 - Math.Min(dtt, dto));
+
+            if (Math.Abs(candidate.Year - (movie.ReleaseDate?.Year ?? 0)) <= 1)
             {
                 res += 3;
             }
-
-            var duration = TimeSpan.FromMilliseconds(MediaHelper.GetMediaInfo(item.FullPath).General.Duration);
-            if (duration > TimeSpan.Zero && movie.Runtime.HasValue)
-            {
-                var mtime = TimeSpan.FromMinutes(movie.Runtime.Value);
-                var diff = Math.Abs(duration.Subtract(mtime).TotalMinutes);
-                var score = (int)Math.Max(5 - diff, 0);
-                {
-                    res += score;
-                }
-            }
-            else
-            {
-                res += 1;
-            }
-
-            return res / 16;
+            return res; // TODO: return value unchecked for 0<x<1 interval
         }
 
-        private bool LooksLike(int? itemYear, DateTime? matchReleaseDate)
+        private Movie MapMovieToEntity(TMDbLib.Objects.Movies.Movie match)
         {
-            if (!itemYear.HasValue || !matchReleaseDate.HasValue) return false;
-            var yd = Math.Abs(itemYear.Value - matchReleaseDate.Value.Year);
-            return yd <= 1;
+            return new Movie
+            {
+                TmdbId = match.Id,
+                ImdbId = match.ImdbId,
+
+                Title = match.Title,
+                ReleaseDate = match.ReleaseDate,
+                Overview = match.Overview,
+
+                Adult = match.Adult,
+                Collection = match.BelongsToCollection?.Name.Replace(" - Collezione", string.Empty),
+                Duration = TimeSpan.FromMinutes(match.Runtime.GetValueOrDefault()),
+                Genres = match.Genres.Select(g => new Genre {Id = g.Id, Name = g.Name}).ToList(),
+
+                ImageUri = _apiClient.GetImageUrl("w185", match.PosterPath).ToString(),
+                PosterPath = match.PosterPath,
+                OriginalLanguage = match.OriginalLanguage,
+                OriginalTitle = match.OriginalTitle,
+                Popularity = match.Popularity,
+                VoteAverage = match.VoteAverage,
+                VoteCount = match.VoteCount,
+            };
         }
 
         private void OnMatchFound(MatchFoundEventArgs e)

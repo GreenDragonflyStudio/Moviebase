@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using log4net;
@@ -29,36 +28,31 @@ namespace Moviebase.Core.Components
 
             using (var db = new LiteDatabase(GlobalSettings.Default.ConnectionString))
             {
-                var hashCollection = db.GetCollection<MovieHash>();
+                var hashCollection = db.GetCollection<MediaFileHash>();
                 var movieCollection = db.GetCollection<Movie>();
                 var hash = IOExtension.QuickHash(filePath);
+                item.Hash = hash;
 
-                //var hashEntity = hashCollection.FindOne(x => x.Hash == hash);
-                //if (hashEntity != null)
-                //{
-                //    var movieEntity = movieCollection.FindById(hashEntity.MovieId);
+                Log.DebugFormat("Hash found: {0}", hash);
+                var hashEntity = hashCollection.FindOne(x => x.Hash == hash);
+                if (hashEntity != null && movieCollection.FindOne(x => x.ImdbId == hashEntity.ImdbId) != null)
+                {
+                    item.Title = hashEntity.Title;
+                    item.Year = hashEntity.Year;
+                    item.ImdbId = hashEntity.ImdbId;
+                    item.IsKnown = true;
 
-                //    item.Title = movieEntity.Title;
-                //    item.ImdbId = movieEntity.ImdbId;
-                //    item.Year = movieEntity.Year;
-                //    item.MovieId = movieEntity.Id;
-                //    item.IsKnown = true;
-
-                //    Log.DebugFormat("Hash Found: {0}", hash);
-                //}
-                //else
+                    Log.DebugFormat("File found on hash table: {0}", hash);
+                }
+                else
                 {
                     var cleaned = await _provider.GuessTitle(item.FullPath);
                     item.Title = cleaned.Title;
                     item.Year = cleaned.Year;
+                    item.ImdbId = cleaned.ImdbId;
                     item.IsKnown = false;
 
-                    // ADD ID HERE
-                    hashCollection.Insert(new MovieHash {Hash = hash});
-                    hashCollection.EnsureIndex(x => x.Id);
-
-                    Log.DebugFormat("Hash Computed: {0}", hash);
-                    Debug.Print(file.Name + " - " + hash);
+                    Log.DebugFormat("File hash recorded: {0}", hash);
                 }
             }
 
