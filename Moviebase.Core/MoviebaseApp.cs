@@ -69,7 +69,7 @@ namespace Moviebase.Core
                     using (var db = new LiteDatabase(GlobalSettings.Default.ConnectionString))
                     {
                         var movieCollection = db.GetCollection<Movie>();
-                        var movie = movieCollection.FindOne(x => x.Id == item.MovieId);
+                        var movie = movieCollection.FindOne(x => x.ImdbId == item.ImdbId);
                         identified.Add(movie);
                     }
                 }
@@ -83,7 +83,6 @@ namespace Moviebase.Core
         private async Task<Tuple<Movie, float>> TryIdentify(AnalyzedFile item)
         {
             Log.DebugFormat("Querying remote: {0} ({1})", item.Title, item.Year);
-            var matches = new List<TMDbLib.Objects.Movies.Movie>();
             List<SearchMovie> listContainer;
 
             if (!string.IsNullOrWhiteSpace(item.ImdbId))
@@ -101,42 +100,42 @@ namespace Moviebase.Core
                 Log.Debug($"Got {results.Results.Count:N0} of {results.TotalResults:N0} results");
             }
 
-            // fetch movie
-            //foreach (var result in listContainer)
-            //{
-            //    Log.DebugFormat(" => {0}| {1} / {2} ({3})", result.Id, result.Title, result.OriginalTitle,
-            //        result.ReleaseDate.GetValueOrDefault().Year);
-
-            //    matches.Add(await _apiClient.GetMovieAsync(result.Id));
-            //}
-            
-            //// sort matches
-            //var resChart = matches
-            //    .Select(x => new
-            //    {
-            //        Movie = EntityMapperHelpers.MapMovieToEntity(x),
-            //        Match = GetMatch(x, item)
-            //    })
-            //    .OrderByDescending(z => z.Match).ToArray();
-
             // get most candidate
             var candidate = new
             {
                 Movie = EntityMapperHelpers.MapMovieToEntity(await _apiClient.GetMovieAsync(listContainer.First().Id)),
                 Match = 1
             };
-            //if (candidate == null) return null;
 
             // find image URI
-            _apiClient.GetConfig();
             candidate.Movie.ImageUri = _apiClient.GetImageUrl("w185", candidate.Movie.PosterPath).ToString();
-            candidate.Movie.FilePath = item.FullPath;
 
             // save to db
             using (var db = new LiteDatabase(GlobalSettings.Default.ConnectionString))
             {
+                // update movie data
                 var movieCollection = db.GetCollection<Movie>();
-                movieCollection.Insert(candidate.Movie);
+                movieCollection.Upsert(candidate.Movie);
+
+                // update data hash
+                var hashCollection = db.GetCollection<MediaFileHash>();
+                var hashEntity = hashCollection.FindOne(x => x.Hash == item.Hash) ?? new MediaFileHash();
+                hashEntity.Hash = item.Hash;
+                hashEntity.ImdbId = candidate.Movie.ImdbId;
+                hashEntity.Title = candidate.Movie.Title;
+                hashEntity.Year = candidate.Movie.Year;
+
+                hashCollection.Upsert(hashEntity);
+
+                // update media file
+                var mediaCollection = db.GetCollection<MediaFile>();
+                var mediaEntity = mediaCollection.FindOne(x => x.Hash == item.Hash) ?? new MediaFile();
+                mediaEntity.Hash = item.Hash;
+                mediaEntity.FullPath = item.FullPath;
+                mediaEntity.Synced = true;
+                mediaEntity.LastSync = DateTime.Now;
+
+                mediaCollection.Upsert(mediaEntity);
             }
             
             return new Tuple<Movie, float>(candidate.Movie, candidate.Match);
@@ -158,14 +157,6 @@ namespace Moviebase.Core
             float score1 = Math.Max(0, 5 - Math.Min(dtt, dto));
             res += score1;
             
-            //if (!string.IsNullOrEmpty(item.SubTitle))
-            //{
-            //    var dst = DamerauLevenshtein.Calculate(item.SubTitle.ToLower(), movie.Title.ToLower());
-            //    var dso = DamerauLevenshtein.Calculate(item.SubTitle.ToLower(), movie.OriginalTitle.ToLower());
-            //    float score2 = Math.Max(0, 3 - Math.Min(dst, dso));
-            //    res += score2;
-            //}
-
             if (LooksLike(item.Year, movie.ReleaseDate))
             {
                 res += 3;
