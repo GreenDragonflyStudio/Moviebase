@@ -1,4 +1,4 @@
-﻿using Moviebase.Core.Components.MediaAnalyzer;
+﻿using Moviebase.Core.Components;
 using Movie = Moviebase.Core.Models.Movie;
 
 namespace Moviebase.Core.Interfaces

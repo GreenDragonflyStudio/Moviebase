@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Moviebase.Core.Components.MediaScanner
+namespace Moviebase.Core.Components
 {
     public class BasicFileScanner : IFileScanner
     {

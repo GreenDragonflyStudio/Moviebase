@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace Moviebase.Core.Components.MediaAnalyzer
+namespace Moviebase.Core.Components
 {
     public sealed class FileRef : IEquatable<FileRef>
     {

@@ -5,7 +5,7 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace Moviebase.Core.Components.MediaOrganizer
+namespace Moviebase.Core.Components
 {
     public class FileOrganizer : IFileOrganizer
     {

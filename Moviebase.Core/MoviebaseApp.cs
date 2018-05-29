@@ -1,7 +1,5 @@
 ﻿using log4net;
-using Moviebase.Core.Components.MediaAnalyzer;
-using Moviebase.Core.Components.MediaOrganizer;
-using Moviebase.Core.Components.MediaScanner;
+using Moviebase.Core.Components;
 using Moviebase.Core.Interfaces;
 using Moviebase.Core.Models;
 using Moviebase.Core.Utils.Algorithms;

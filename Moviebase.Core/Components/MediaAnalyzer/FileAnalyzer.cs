@@ -1,11 +1,10 @@
 using log4net;
-using Moviebase.Core.Components.TitleCleaner;
 using Moviebase.Core.Interfaces;
 using Moviebase.Core.Utils.Algorithms;
 using System;
 using System.IO;
 
-namespace Moviebase.Core.Components.MediaAnalyzer
+namespace Moviebase.Core.Components
 {
     public class FileAnalyzer : IFileAnalyzer
     {

@@ -1,20 +1,22 @@
 using Moviebase.Core.Utils;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Moviebase.Core.Components.TitleCleaner
+namespace Moviebase.Core.Components
 {
     public static class MovieTitleCleaner
     {
         #region Fields
 
         private const string SpecialMarker = "§=§";
+        private static readonly string[] QualityWords = new[] { "320p", "480p", "720p", "1080p" };
         private static readonly string[] Languages;
-        private static readonly string[] ReservedWords;
-        private static readonly string[] SpaceChars;
+        private static readonly List<string> ReservedWords;
+        private static readonly string[] SpaceChars = new[] { ".", "_", " " };
 
         #endregion Fields
 
@@ -22,16 +24,15 @@ namespace Moviebase.Core.Components.TitleCleaner
 
         static MovieTitleCleaner()
         {
-            ReservedWords = new[]
+            ReservedWords = new List<string>(new[]
             {
-                SpecialMarker, "hevc", "bdrip", "dvdrip", "Bluray", "x264", "h264", "AC3", "DTS", "480p", "720p", "1080p"
-            };
+                SpecialMarker, "hevc", "bdrip", "dvdrip", "Bluray", "x264", "h264", "AC3", "DTS", "hd","cam"
+            });
+            ReservedWords.AddRange(QualityWords);
             var cultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
             var l = cultures.Select(x => x.EnglishName).ToList();
             l.AddRange(cultures.Select(x => x.ThreeLetterISOLanguageName));
             Languages = l.Distinct().ToArray();
-
-            SpaceChars = new[] { ".", "_", " " };
         }
 
         #endregion Constructors
@@ -64,6 +65,7 @@ namespace Moviebase.Core.Components.TitleCleaner
                     title = string.Join(" ", title, tok).Trim();
                 }
             }
+
             temp = title;
 
             tokens = temp.Split(SpaceChars, StringSplitOptions.RemoveEmptyEntries);
@@ -93,12 +95,13 @@ namespace Moviebase.Core.Components.TitleCleaner
                 Year = maybeYear
             };
 
-            // TODO : Change to Regex
-            if (title.Count(x => x == '-') == 1)
+            var rx = new Regex(@"([^\s]+)\s*-\s*([^\n]+)", RegexOptions.Compiled & RegexOptions.IgnoreCase);
+
+            var a = rx.Match(title + "\n");
+            if (a.Success)
             {
-                var sp = title.Split('-');
-                res.Title = sp[0];
-                res.SubTitle = sp[1];
+                res.Title = a.Groups[0].Value;
+                res.SubTitle = a.Groups[1].Value;
             }
             else
             {
@@ -110,7 +113,7 @@ namespace Moviebase.Core.Components.TitleCleaner
 
         private static bool LooksLikeYear(string dataRound)
         {
-            return Regex.IsMatch(dataRound, "^(19|20)[0-9][0-9]");
+            return Regex.IsMatch(dataRound, " ^ (19|20)[0-9][0-9]");
         }
 
         private static string RemoveBrackets(string inputString, char openChar, char closeChar, ref int? maybeYear)
@@ -133,7 +136,7 @@ namespace Moviebase.Core.Components.TitleCleaner
                             break;
                         }
                 }
-                str = str.ReplaceBetween(openChar, closeChar, string.Format(" {0} ", SpecialMarker));
+                str = str.ReplaceBetween(openChar, closeChar, $" {SpecialMarker} ");
             }
             return str;
         }

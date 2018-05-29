@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Moviebase.Core.Components.MediaAnalyzer
+namespace Moviebase.Core.Components
 {
     public interface IFileAnalyzer
     {

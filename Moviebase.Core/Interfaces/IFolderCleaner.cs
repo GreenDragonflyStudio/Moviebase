@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Moviebase.Core.Components.MediaOrganizer
+namespace Moviebase.Core.Components
 {
     public interface IFolderCleaner
     {
