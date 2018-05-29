@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -12,22 +13,22 @@ namespace Moviebase.Services.Title
     public class TitleCleanerProvider : ITitleProvider
     {
         private const string SpecialMarker = "§=§";
+        private static readonly string[] QualityWords = new[] { "320p", "480p", "720p", "1080p" };
         private static readonly string[] Languages;
-        private static readonly string[] ReservedWords;
-        private static readonly string[] SpaceChars;
+        private static readonly List<string> ReservedWords;
+        private static readonly string[] SpaceChars = new[] { ".", "_", " " };
 
         static TitleCleanerProvider()
         {
-            ReservedWords = new[]
+            ReservedWords = new List<string>(new[]
             {
-                SpecialMarker, "hevc", "bdrip", "dvdrip", "Bluray", "x264", "h264", "AC3", "DTS", "480p", "720p", "1080p"
-            };
+                SpecialMarker, "hevc", "bdrip", "dvdrip", "Bluray", "x264", "h264", "AC3", "DTS", "hd","cam"
+            });
+            ReservedWords.AddRange(QualityWords);
             var cultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
             var l = cultures.Select(x => x.EnglishName).ToList();
             l.AddRange(cultures.Select(x => x.ThreeLetterISOLanguageName));
             Languages = l.Distinct().ToArray();
-
-            SpaceChars = new[] { ".", "_", " " };
         }
         
         public void AddProvider(ITitleProvider provider)
@@ -53,16 +54,15 @@ namespace Moviebase.Services.Title
             {
                 if (ReservedWords.Any(x => tok.StartsWith(x, StringComparison.OrdinalIgnoreCase)))
                 {
-                    if (title.Length > 0)
-                        break;
+                    if (title.Length > 0) break;
                 }
                 else
                 {
                     title = string.Join(" ", title, tok).Trim();
                 }
             }
-            temp = title;
 
+            temp = title;
             tokens = temp.Split(SpaceChars, StringSplitOptions.RemoveEmptyEntries);
             for (var i = tokens.Length - 1; i >= 0; i--)
             {
@@ -90,12 +90,12 @@ namespace Moviebase.Services.Title
                 Year = maybeYear ?? 0
             };
 
-            // TODO : Change to Regex
-            if (title.Count(x => x == '-') == 1)
+            var rx = new Regex(@"([^\s]+)\s*-\s*([^\n]+)", RegexOptions.Compiled & RegexOptions.IgnoreCase);
+            var a = rx.Match(title + "\n");
+            if (a.Success)
             {
-                var sp = title.Split('-');
-                res.Title = sp[0];
-                res.SubTitle = sp[1];
+                res.Title = a.Groups[0].Value;
+                res.SubTitle = a.Groups[1].Value;
             }
             else
             {
@@ -107,7 +107,7 @@ namespace Moviebase.Services.Title
 
         private static bool LooksLikeYear(string dataRound)
         {
-            return Regex.IsMatch(dataRound, "^(19|20)[0-9][0-9]");
+            return Regex.IsMatch(dataRound, " ^ (19|20)[0-9][0-9]");
         }
 
         private static string RemoveBrackets(string inputString, char openChar, char closeChar, ref int? maybeYear)
@@ -134,5 +134,6 @@ namespace Moviebase.Services.Title
             }
             return str;
         }
+
     }
 }

@@ -22,12 +22,13 @@ namespace Moviebase.Services.Title
             try
             {
                 var output = await ProcessHelper.StartWithOutput(AppName, string.Format(Arguments, filename), RedirectStream.StandardOutput);
-                var type = new {title = "", year = 0};
+                var type = new {title = "", year = 0, screen_size=""};
                 var obj = JsonConvert.DeserializeAnonymousType(output, type);
                 return new GuessTitle
                 {
                     Title = obj.title,
-                    Year = obj.year
+                    Year = obj.year,
+                    ScreenSize = obj.screen_size
                 };
             }
             catch (Exception e)
