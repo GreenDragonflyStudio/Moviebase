@@ -12,7 +12,7 @@ namespace Moviebase.DAL.Entities
 
         public string Title { get; set; }
         public DateTime? ReleaseDate { get; set; }
-        public int? Year => ReleaseDate?.Year;
+        public int Year => ReleaseDate?.Year ?? 0;
         public string Overview { get; set; }
 
         public bool Adult { get; set; }
@@ -20,14 +20,12 @@ namespace Moviebase.DAL.Entities
         public TimeSpan Duration { get; set; }
         public IEnumerable<Genre> Genres { get; set; }
 
+        public string PosterPath { get; set; }
         public string ImageUri { get; set; }
         public string OriginalLanguage { get; set; }
         public string OriginalTitle { get; set; }
         public double Popularity { get; set; }
         public double VoteAverage { get; set; }
         public int VoteCount { get; set; }
-
-        public string FilePath { get; set; }
-        public string PosterPath { get; set; }
     }
 }

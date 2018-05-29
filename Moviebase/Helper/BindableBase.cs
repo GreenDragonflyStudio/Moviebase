@@ -1,14 +1,18 @@
 ﻿using Moviebase.Helper;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using Ninject.Extensions.Interception;
+using Ninject.Extensions.Interception.Attributes;
 
 namespace Moviebase.ViewModels
 {
     /// <summary>
     /// Implementation of <see cref="INotifyPropertyChanged"/> to simplify models.
     /// </summary>
-    public abstract class BindableBase : INotifyPropertyChanged
+    [NotifyOfChanges]
+    public abstract class BindableBase : IAutoNotifyPropertyChanged
     {
         /// <summary>
         /// Multicast event for property change notifications.
@@ -42,9 +46,10 @@ namespace Moviebase.ViewModels
         /// <param name="propertyName">Name of the property used to notify listeners.  This
         /// value is optional and can be provided automatically when invoked from compilers
         /// that support <see cref="CallerMemberNameAttribute"/>.</param>
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            Debug.Print("Changed: " + propertyName);
         }
 
         public DelegateCommand NavigateCommand { get; } = new DelegateCommand(DoNavigate);
@@ -59,5 +64,6 @@ namespace Moviebase.ViewModels
         {
             Navigation.Navigate(new Uri(obj.ToString(), UriKind.RelativeOrAbsolute));
         }
+
     }
 }
