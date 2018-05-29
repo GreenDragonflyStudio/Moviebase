@@ -11,13 +11,15 @@ namespace Moviebase.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value == null) return "";
+
             var obj = (IEnumerable<Genre>) value;
-            return string.Join(",", obj.Select(x => x.Name));
+            return string.Join(", ", obj.Select(x => x.Name));
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return "";
+            throw new NotImplementedException();
         }
     }
 }

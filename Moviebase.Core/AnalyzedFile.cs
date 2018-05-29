@@ -1,5 +1,3 @@
-using System;
-
 namespace Moviebase.Core
 {
     public class AnalyzedFile
@@ -11,10 +9,10 @@ namespace Moviebase.Core
 
         public bool IsKnown { get; set; }
         public string FullPath { get; }
+        public string Hash { get; set; }
 
-        public int MovieId { get; set; }
         public string ImdbId { get; set; }
         public string Title { get; set; }
-        public int? Year { get; set; }
+        public int Year { get; set; }
     }
 }

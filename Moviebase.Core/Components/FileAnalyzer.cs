@@ -9,17 +9,22 @@ using Moviebase.Services.Title;
 
 namespace Moviebase.Core.Components
 {
+    /// <inheritdoc />
     public class FileAnalyzer : IFileAnalyzer
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(FileAnalyzer));
-
         private readonly ITitleProvider _provider;
 
+        /// <summary>
+        /// Initialize new instance of <see cref="FileAnalyzer"/>.
+        /// </summary>
+        /// <param name="titleProvider">Movie title provider.</param>
         public FileAnalyzer(ITitleProvider titleProvider)
         {
             _provider = titleProvider;
         }
 
+        /// <inheritdoc />
         public async Task<AnalyzedFile> Analyze(string filePath)
         {
             var file = new FileInfo(filePath);
@@ -29,13 +34,15 @@ namespace Moviebase.Core.Components
             using (var db = new LiteDatabase(GlobalSettings.Default.ConnectionString))
             {
                 var hashCollection = db.GetCollection<MediaFileHash>();
-                var movieCollection = db.GetCollection<Movie>();
+                var fileCollection = db.GetCollection<MediaFile>();
+
+                // lookup for hash
                 var hash = IOExtension.QuickHash(filePath);
                 item.Hash = hash;
-
-                Log.DebugFormat("Hash found: {0}", hash);
                 var hashEntity = hashCollection.FindOne(x => x.Hash == hash);
-                if (hashEntity != null && movieCollection.FindOne(x => x.ImdbId == hashEntity.ImdbId) != null)
+                
+                // the file has recognized hash on database and has matching movie information
+                if (hashEntity != null && fileCollection.Exists(x => x.Hash == hashEntity.Hash))
                 {
                     item.Title = hashEntity.Title;
                     item.Year = hashEntity.Year;
@@ -46,6 +53,7 @@ namespace Moviebase.Core.Components
                 }
                 else
                 {
+                    // the file only has one information on database, guessing is needed
                     var cleaned = await _provider.GuessTitle(item.FullPath);
                     item.Title = cleaned.Title;
                     item.Year = cleaned.Year;

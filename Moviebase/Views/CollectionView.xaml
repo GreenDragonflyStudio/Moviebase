@@ -51,15 +51,11 @@
             </mah:SplitView.Pane>
             <mah:SplitView.Content>
                 <Grid Margin="10,4,10,10" Grid.Row="1" Grid.RowSpan="2">
-                    <DataGrid Margin="0,42,0,136"
-                Style="{DynamicResource AzureDataGrid}"
-                AutoGenerateColumns="False"
-                CanUserAddRows="False"
-                CanUserReorderColumns="False"
-                CanUserResizeColumns="True"
-                CanUserResizeRows="False"
-                EnableColumnVirtualization="True"
-                EnableRowVirtualization="True"  SelectionUnit="FullRow" ItemsSource="{Binding Movies}" SelectedItem="{Binding SelectedMovie}" SelectionChanged="DataGrid_SelectionChanged">
+                    <DataGrid Margin="0,42,0,136" Style="{DynamicResource AzureDataGrid}" AutoGenerateColumns="False" 
+                              CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeColumns="True" 
+                              CanUserResizeRows="False" EnableColumnVirtualization="True" EnableRowVirtualization="True" 
+                              SelectionUnit="FullRow" ItemsSource="{Binding Movies}" SelectedItem="{Binding SelectedMovie}" 
+                              SelectionChanged="DataGrid_SelectionChanged">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Title" Binding="{Binding Title}" MinWidth="130" />
                             <DataGridTextColumn Header="Year" Binding="{Binding Year}"  Width="60" CanUserResize="False" />

@@ -7,7 +7,7 @@
              xmlns:md="http://metro.mahapps.com/winfx/xaml/controls"
              x:Class="Moviebase.Views.MovieItemView"
              mc:Ignorable="d"
-             d:DesignHeight="445.814" d:DesignWidth="201.838" d:DataContext="{d:DesignData /SampleData/MovieItemSampleData.xaml}">
+             d:DesignHeight="445.814" d:DesignWidth="201.838">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="180" />
@@ -19,12 +19,12 @@
             <Image x:Name="image" />
         </md:Badged>
         <TextBlock  HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Grid.Row="1"  Text="{Binding Year}" FontWeight="Bold" Foreground="White" />
-        <TextBlock Text="{Binding Rating}" Margin="0,10,8.48,0" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" FontWeight="Bold" Foreground="White" />
+        <TextBlock Text="{Binding Popularity}" Margin="0,10,8.48,0" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="1" FontWeight="Bold" Foreground="White" />
         <RichTextBox Grid.Row="1" Margin="0,30.96,0,10" Background="{x:Null}" BorderBrush="{x:Null}" IsReadOnlyCaretVisible="True" AllowDrop="False">
             <FlowDocument>
                 <Paragraph>
                     <Span FontSize="9" Block.TextAlignment="Justify">
-                        <Run Text="{Binding Synopsis}" />
+                        <Run Text="{Binding Overview}" />
                     </Span>
                 </Paragraph>
             </FlowDocument>

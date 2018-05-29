@@ -87,7 +87,7 @@ namespace Moviebase.Services.Title
             }
             var res = new GuessTitle
             {
-                Year = maybeYear
+                Year = maybeYear ?? 0
             };
 
             // TODO : Change to Regex

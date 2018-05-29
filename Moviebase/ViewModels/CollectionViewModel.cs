@@ -12,20 +12,15 @@ namespace Moviebase.ViewModels
 {
     public class CollectionViewModel : BindableBase
     {
-        private Movie _SelectedMovie;
+        //private Movie _SelectedMovie;
 
-        public Movie SelectedMovie
-        {
-            get
-            {
-                return _SelectedMovie;
-            }
-            set
-            {
-                _SelectedMovie = value;
-                OnPropertyChanged("SelectedMovie");
-            }
-        }
+        //public Movie SelectedMovie
+        //{
+        //    get => _SelectedMovie;
+        //    set => SetProperty(ref _SelectedMovie, value);
+        //}
+
+        public virtual Movie SelectedMovie { get; set; }
 
         public ObservableCollection<Movie> Movies { get; } = new ObservableCollection<Movie>();
         private DispatcherTimer timer;
@@ -34,24 +29,15 @@ namespace Moviebase.ViewModels
 
         public CollectionViewModel()
         {
-            //using (var db = new LiteDatabase(GlobalSettings.Default.ConnectionString))
-            //{
-            //    var movies = db.GetCollection<Movie>();
-            //    foreach (var movie in movies.FindAll())
-            //    {
-            //        Movies.Add(movie);
-            //    }
-            //}
-
-            AddCommand = new DelegateCommand(async () =>
+            using (var db = new LiteDatabase(GlobalSettings.Default.ConnectionString))
             {
-                var app = App.Kernel.Get<MoviebaseApp>();
-                var result = await app.ScanAsync("E:\\Programming\\Sandbox\\Moviebase");
-                foreach (var movie in result)
+                var col = db.GetCollection<Movie>();
+                foreach (var movie in col.FindAll())
                 {
                     Movies.Add(movie);
                 }
-            });
+            }
+
         }
 
 

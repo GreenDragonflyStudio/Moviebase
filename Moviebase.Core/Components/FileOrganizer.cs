@@ -1,111 +1,80 @@
 using System;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using log4net;
+using LiteDB;
 using Moviebase.Core.Utils;
 using Moviebase.DAL;
 using Moviebase.DAL.Entities;
+using Ninject.Planning.Targets;
 
 namespace Moviebase.Core.Components
 {
+    /// <inheritdoc />
     public class FileOrganizer : IFileOrganizer
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(FileOrganizer));
         private readonly IFolderCleaner _cleaner;
-        private string _renameTemplate;
+        private readonly IPathTokenizer _fileNameTokenizer;
 
-        public static readonly string DefaultTemplate = string.Format("{0}\\{1}\\({2}) {1}.{3}",
-            FileNameTokens.Collection, FileNameTokens.Title, FileNameTokens.Year, FileNameTokens.Extension);
-
-        public string DestinationFolder { get; }
-        public string RenameTemplate
+        /// <summary>
+        /// Initialize new instance of <see cref="FileOrganizer"/>.
+        /// </summary>
+        /// <param name="cleaner">Folder cleaner instance.</param>
+        /// <param name="fileNameTokenizer">Path tokenizer instance.</param>
+        public FileOrganizer(IFolderCleaner cleaner, IPathTokenizer fileNameTokenizer)
         {
-            get => _renameTemplate;
-            private set
-            {
-                if (!FileNameTokens.IsTemplateValid(value)) throw new ArgumentException("Rename Template is invalid");
-                _renameTemplate = value;
-            }
-        }
-
-        public FileOrganizer(IFolderCleaner cleaner)
-        {
-            DestinationFolder = GlobalSettings.Default.TargetPath;
-            _renameTemplate = GlobalSettings.Default.RenameTemplate;
             _cleaner = cleaner;
-        }
-        
-        #region Methods
+            _fileNameTokenizer = fileNameTokenizer;
 
-        public string Organize(string filePath, Movie movie)
+            _fileNameTokenizer.TokenTemplate = GlobalSettings.Default.RenameTemplate;
+            _fileNameTokenizer.TargetPath = GlobalSettings.Default.TargetPath;
+        }
+
+        /// <inheritdoc />
+        public void Organize(MediaFile media)
         {
-            var fname = GetRenamedPath(filePath, movie);
-            var target = Path.Combine(DestinationFolder, fname);
-            var targetPath = SafeAddSuffix(target);
+            // trasnform path
+            var originalPath = media.FullPath;
+            var targetPath = _fileNameTokenizer.GetTokenizedFilePath(originalPath, new PathToken(media, LookupMovie(media)));
+            var targetDir = Path.GetDirectoryName(targetPath);
+            Trace.Assert(targetDir != null);
 
-            IOExtension.SafeCreateDirectory(Path.GetDirectoryName(targetPath));
-            IOExtension.Rename(filePath, targetPath);
+            // move
+            targetPath = IOExtension.EnsureNonDuplicateName(targetPath, out int duplicateCount);
+            Log.InfoFormat("Target path sanitized. Possible {0} duplicates.", duplicateCount);
 
-            Log.InfoFormat("Match Saved: {0} ==> {1}", filePath, targetPath);
-            _cleaner?.Clean(Path.GetDirectoryName(filePath));
+            Directory.CreateDirectory(targetDir);
+            File.Move(originalPath, targetPath);
 
-            return targetPath;
+            // clean empty dir
+            UpdateMediaFile(targetPath, media);
+            _cleaner.Clean(Path.GetDirectoryName(originalPath));
+            Log.InfoFormat("Media organized: {0} ==> {1}", originalPath, targetPath);
         }
 
-        private static string CleanFileName(string fileName)
+        // lookup associated movie from media in database
+        private Movie LookupMovie(MediaFile media)
         {
-            var pathTokens = fileName.Split(new[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
-            for (int i = 0; i < pathTokens.Length; i++)
+            using (var db = new LiteDatabase(GlobalSettings.Default.ConnectionString))
             {
-                var token = pathTokens[i];
-                pathTokens[i] = Path.GetInvalidFileNameChars()
-                .Aggregate(token, (current, c) => current.Replace(c.ToString(), string.Empty));
+                var movieCollection = db.GetCollection<Movie>();
+                return movieCollection.FindOne(x => x.TmdbId == media.TmdbId);
             }
-            return string.Join("\\", pathTokens);
         }
 
-        private static string SafeAddSuffix(string fullPath)
+        // update media with new path
+        private void UpdateMediaFile(string path, MediaFile media)
         {
-            var count = 1;
-
-            var fileNameOnly = Path.GetFileNameWithoutExtension(fullPath);
-            var extension = Path.GetExtension(fullPath);
-            var path = Path.GetDirectoryName(fullPath) ?? string.Empty;
-            var newFullPath = fullPath;
-
-            var dupes = false;
-            while (File.Exists(newFullPath))
+            using (var db = new LiteDatabase(GlobalSettings.Default.ConnectionString))
             {
-                dupes = true;
-                var tempFileName = $"{fileNameOnly}({count++})";
-                newFullPath = Path.Combine(path, tempFileName + extension);
+                var mediaCollection = db.GetCollection<MediaFile>();
+                media.FullPath = path;
+                media.LastSync = DateTime.Now;
+
+                mediaCollection.Update(media);
+                mediaCollection.EnsureIndex(x => x.Id);
             }
-            if (dupes)
-            {
-                Log.WarnFormat("Seems path {0} contains some duplicated movies", path);
-            }
-            return newFullPath;
         }
-
-        private string GetRenamedPath(string filePath, Movie movie)
-        {
-            var fren = RenameTemplate;
-            fren = fren.Replace(FileNameTokens.Title, movie.Title);
-            fren = fren.Replace(FileNameTokens.Year, movie.Year?.ToString() ?? string.Empty);
-            fren = fren.Replace(FileNameTokens.Collection, movie.Collection);
-            fren = fren.Replace(FileNameTokens.Extension, Path.GetExtension(filePath));
-            fren = fren.Replace(FileNameTokens.Genre, movie.Genres.FirstOrDefault()?.Name);
-            fren = fren.Replace(FileNameTokens.AllGenres, string.Join(",", movie.Genres.Select(x => x.Name)));
-
-            while (fren.Contains(@"\\"))
-            {
-                fren = fren.Replace(@"\\", @"\");
-            }
-
-            var frenamed = CleanFileName(fren);
-            return frenamed;
-        }
-
-        #endregion Methods
     }
 }

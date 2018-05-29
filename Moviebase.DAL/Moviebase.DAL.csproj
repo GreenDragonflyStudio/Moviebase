@@ -48,7 +48,7 @@
   <ItemGroup>
     <Compile Include="Entities\Folder.cs" />
     <Compile Include="Entities\MediaFile.cs" />
-    <Compile Include="Entities\MovieHash.cs" />
+    <Compile Include="Entities\MediaFileHash.cs" />
     <Compile Include="Entities\Notification.cs" />
     <Compile Include="Entities\Genre.cs" />
     <Compile Include="Entities\Movie.cs" />
