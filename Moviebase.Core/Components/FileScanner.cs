@@ -6,12 +6,12 @@ using log4net;
 namespace Moviebase.Core.Components
 {
     /// <inheritdoc />
-    public class BasicFileScanner : IFileScanner
+    public class FileScanner : IFileScanner
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(FileAnalyzer));
 
         /// <inheritdoc />
-        public IEnumerable<string> Scan(string path)
+        public IEnumerable<string> ScanMovie(string path)
         {
             Log.DebugFormat("Scanning: {0}", path);
 
@@ -19,6 +19,16 @@ namespace Moviebase.Core.Components
             return Directory.Exists(path) 
                 ? Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories).Where(x => extensions.Any(x.EndsWith)) 
                 : new[] {""};
+        }
+
+        public IEnumerable<string> ScanSubtitle(string path)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IEnumerable<string> ScanPoster(string path)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

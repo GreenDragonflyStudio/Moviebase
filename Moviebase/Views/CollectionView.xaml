@@ -65,7 +65,7 @@
                         </DataGrid.Columns>
                     </DataGrid>
                     <Button Content="Add" HorizontalAlignment="Left" Width="72" Height="28" VerticalAlignment="Top" Command="{Binding AddCommand}" />
-                    <Button Content="Remove" HorizontalAlignment="Right" Width="72" Height="28" VerticalAlignment="Top" />
+                    <Button Content="Remove" HorizontalAlignment="Right" Width="72" Height="28" VerticalAlignment="Top" Command="{Binding RemoveCommand}" />
                     <Image x:Name="image" HorizontalAlignment="Left" Width="132" Height="131" VerticalAlignment="Bottom" />
                 </Grid>
             </mah:SplitView.Content>
