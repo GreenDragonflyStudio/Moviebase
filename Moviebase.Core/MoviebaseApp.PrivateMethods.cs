@@ -13,6 +13,7 @@ namespace Moviebase.Core
 {
     public sealed partial class MoviebaseApp
     {
+        // get a value how it's likely the candidate is the guessed movie
         private float GetMatch(SearchMovie movie, AnalyzedFile candidate)
         {
             float res = 0;
@@ -28,6 +29,7 @@ namespace Moviebase.Core
             return res; // TODO: return value unchecked for 0<x<1 interval
         }
 
+        // identify a file
         private async Task<Movie> IdentifyFile(AnalyzedFile item)
         {
             Log.DebugFormat("Querying remote: {0} ({1})", item.Title, item.Year);

@@ -19,8 +19,7 @@ namespace Moviebase.DAL.Entities
         public string Collection { get; set; }
         public TimeSpan Duration { get; set; }
         public IEnumerable<Genre> Genres { get; set; }
-
-        public string PosterPath { get; set; }
+        
         public string ImageUri { get; set; }
         public string OriginalLanguage { get; set; }
         public string OriginalTitle { get; set; }
