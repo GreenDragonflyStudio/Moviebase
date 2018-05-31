@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Moviebase.Core.Utils;
 using Moviebase.DAL.Entities;
 using Moviebase.Services.Metadata;
 using TMDbLib.Objects.Find;
 using TMDbLib.Objects.Search;
 
-namespace Moviebase.Core
+namespace Moviebase.Core.App
 {
     public sealed partial class MoviebaseApp
     {
@@ -59,7 +59,8 @@ namespace Moviebase.Core
                 var candidateMovieRaw = listContainer.OrderByDescending(x => GetMatch(x, item)).FirstOrDefault();
                 if (candidateMovieRaw == null) return null;
 
-                movie = MapMovieToEntity(await _apiClient.GetMovieAsync(candidateMovieRaw.Id));
+                movie = _dal.MapMovieToEntity(await _apiClient.GetMovieAsync(candidateMovieRaw.Id),
+                    _apiClient.GetImageUrl("w185", candidateMovieRaw.PosterPath).ToString());
             }
             catch (Exception e)
             {
@@ -79,17 +80,5 @@ namespace Moviebase.Core
             }
         }
 
-        #region Event Invocator
-
-        private void OnProgressChanged(int current, int total)
-        {
-            if (total <= 0) return;
-
-            var p = 100 * current / total;
-            var e = new ProgressChangedEventArgs(p, null);
-            ProgressChanged?.Invoke(this, e);
-        }
-
-        #endregion
     }
 }

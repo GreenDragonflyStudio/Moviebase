@@ -1,4 +1,4 @@
-namespace Moviebase.Core
+namespace Moviebase.Core.Utils
 {
     /// <summary>
     /// Represent an analyzed file.

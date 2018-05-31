@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using Moviebase.Core;
+using Moviebase.Core.App;
 using Moviebase.Core.Components;
 using Moviebase.ViewModels;
 using Ninject;

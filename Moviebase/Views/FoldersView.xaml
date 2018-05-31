@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Moviebase.Views"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
-    xmlns:m="clr-namespace:Moviebase.DAL.Entities;assembly=Moviebase.DAL,.NETFramework,Version=v4.5" x:Class="Moviebase.Views.FoldersView"
+            xmlns:m="clr-namespace:Moviebase.DAL.Entities;assembly=Moviebase.DAL,.NETFramework,Version=v4.5" x:Class="Moviebase.Views.FoldersView"
              mc:Ignorable="d"
              d:DesignHeight="500" d:DesignWidth="700">
     <UserControl.Resources>

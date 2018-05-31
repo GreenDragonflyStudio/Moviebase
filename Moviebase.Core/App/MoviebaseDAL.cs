@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Linq;
 using LiteDB;
+using Moviebase.Core.Utils;
 using Moviebase.DAL;
 using Moviebase.DAL.Entities;
 
-namespace Moviebase.Core
+// ReSharper disable once InconsistentNaming
+
+namespace Moviebase.Core.App
 {
-    public sealed partial class MoviebaseApp
+    /// <inheritdoc />
+    public class MoviebaseDAL : IMoviebaseDAL
     {
-        // map specified TMDB movie object to Moviebase's DAL Movie object
-        private Movie MapMovieToEntity(TMDbLib.Objects.Movies.Movie match)
+        /// <inheritdoc />
+        public Movie MapMovieToEntity(TMDbLib.Objects.Movies.Movie match, string imageUri)
         {
             return new Movie
             {
@@ -25,7 +29,7 @@ namespace Moviebase.Core
                 Duration = TimeSpan.FromMinutes(match.Runtime.GetValueOrDefault()),
                 Genres = match.Genres.Select(g => new Genre { Id = g.Id, Name = g.Name }).ToList(),
 
-                ImageUri = _apiClient.GetImageUrl("w185", match.PosterPath).ToString(),
+                ImageUri = imageUri,
                 OriginalLanguage = match.OriginalLanguage,
                 OriginalTitle = match.OriginalTitle,
                 Popularity = match.Popularity,
@@ -34,8 +38,8 @@ namespace Moviebase.Core
             };
         }
 
-        // lookup Movie info from IMDB ID
-        private Movie GetMovieByImdbId(string imdbId)
+        /// <inheritdoc />
+        public Movie GetMovieByImdbId(string imdbId)
         {
             using (var db = new LiteDatabase(GlobalSettings.Default.ConnectionString))
             {
@@ -44,8 +48,8 @@ namespace Moviebase.Core
             }
         }
 
-        // record specified folder to folder table
-        private void RecordScanFolder(string path)
+        /// <inheritdoc />
+        public void RecordScanFolder(string path)
         {
             using (var db = new LiteDatabase(GlobalSettings.Default.ConnectionString))
             {
@@ -59,8 +63,8 @@ namespace Moviebase.Core
             }
         }
 
-        // record specified file to media file table and hash table
-        private void RecordScanFile(Movie movie, AnalyzedFile file)
+        /// <inheritdoc />
+        public void RecordScanFile(AnalyzedFile file, Movie movie)
         {
             using (var db = new LiteDatabase(GlobalSettings.Default.ConnectionString))
             {
@@ -87,6 +91,20 @@ namespace Moviebase.Core
                 mediaEntity.LastSync = DateTime.Now;
 
                 mediaCollection.Upsert(mediaEntity);
+            }
+        }
+
+        /// <inheritdoc />
+        public void RecordExtraFile(AnalyzedFile file, string subtitlePath, string posterPath)
+        {
+            using (var db = new LiteDatabase(GlobalSettings.Default.ConnectionString))
+            {
+                var mediaCollection = db.GetCollection<MediaFile>();
+                var entity = mediaCollection.FindOne(x => x.FullPath == file.FullPath);
+                entity.SubtitlePath = subtitlePath;
+                entity.PosterPath = posterPath;
+
+                mediaCollection.EnsureIndex(x => x.Id);
             }
         }
     }

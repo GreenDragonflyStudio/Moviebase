@@ -12,6 +12,20 @@ namespace Moviebase.Core.Components
         /// </summary>
         /// <param name="path">Full path to directory to be scanned.</param>
         /// <returns><see cref="IEnumerable{T}"/> of file paths.</returns>
-        IEnumerable<string> Scan(string path);
+        IEnumerable<string> ScanMovie(string path);
+
+        /// <summary>
+        /// Search for subtitle files in specified <paramref name="path"/>.
+        /// </summary>
+        /// <param name="path">Full path to directory to be scanned.</param>
+        /// <returns><see cref="IEnumerable{T}"/> of file paths.</returns>
+        IEnumerable<string> ScanSubtitle(string path);
+
+        /// <summary>
+        /// Search for poster images files in specified <paramref name="path"/>.
+        /// </summary>
+        /// <param name="path">Full path to directory to be scanned.</param>
+        /// <returns><see cref="IEnumerable{T}"/> of file paths.</returns>
+        IEnumerable<string> ScanPoster(string path);
     }
 }

@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Moviebase.Core
+namespace Moviebase.Core.App
 {
     /// <summary>
     /// Top level implementation of Moviebase functionality.
@@ -30,7 +30,7 @@ namespace Moviebase.Core
         Task ScanFileAsync(string filePath);
 
         /// <summary>
-        /// Synchronize folder content on target path.
+        /// Associate folder content on target path to MediaFile table.
         /// </summary>
         /// <param name="cancellationToken">Cancellation token to cancel the sync process.</param>
         /// <returns><see cref="Task"/> object of current process.</returns>
@@ -45,7 +45,7 @@ namespace Moviebase.Core
         /// assignment because it's not implemented yet to distinguish subtitle and movie file.
         /// </para>
         /// </remarks>
-        Task SynchronizeAsync(CancellationToken? cancellationToken = null);
+        Task AssociateAsync(CancellationToken? cancellationToken = null);
 
         /// <summary>
         /// Organize files on database to designated folder.

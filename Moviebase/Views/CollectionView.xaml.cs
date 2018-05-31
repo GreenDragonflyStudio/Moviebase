@@ -14,9 +14,6 @@ namespace Moviebase.Views
             InitializeComponent();
             var viewModel = App.Kernel.Get<CollectionViewModel>();
             this.DataContext = viewModel;
-
-            this.Loaded += (sender, args) => viewModel.Start();
-            this.Unloaded += (sender, args) => viewModel.Stop();
         }
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
