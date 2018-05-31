@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 
+// ReSharper disable once InconsistentNaming
+
 namespace Moviebase.Core.Utils
 {
     /// <summary>
@@ -16,19 +18,29 @@ namespace Moviebase.Core.Utils
         /// <summary>
         /// Check if specified path is directory.
         /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
+        /// <param name="path">Full path to directory being checked.</param>
+        /// <returns><c>True</c> if the specified path is a directory, otherwise <c>Flase</c>.</returns>
         public static bool IsDirectory(string path)
         {
             return File.GetAttributes(path).HasFlag(FileAttributes.Directory);
         }
 
         /// <summary>
+        /// Check if specified path is exist.
+        /// </summary>
+        /// <param name="path">Full path to directory or file.</param>
+        /// <returns><c>True</c> if the specified path is exist, otherwise <c>Flase</c>.</returns>
+        public static bool Exists(string path)
+        {
+            return File.Exists(path) || Directory.Exists(path);
+        }
+
+        /// <summary>
         /// Check if speified path is readonly.
         /// </summary>
-        /// <param name="path"></param>
-        /// <param name="recursive"></param>
-        /// <returns></returns>
+        /// <param name="path">Full path to directory or file.</param>
+        /// <param name="recursive">If the specified path is a directory, check all file system for read-only attribute.</param>
+        /// <returns><c>True</c> if the specified path contains read-only attribute, otherwise <c>Flase</c>.</returns>
         public static bool IsReadOnly(string path, bool recursive)
         {
             if (File.GetAttributes(path).HasFlag(FileAttributes.ReadOnly))
@@ -37,25 +49,15 @@ namespace Moviebase.Core.Utils
             }
 
             if (!IsDirectory(path) || !recursive) return false;
-            var items = Directory.EnumerateFileSystemEntries(path, "*", SearchOption.AllDirectories);
-            return items.Any(x => IsReadOnly(x, false));
-        }
-
-        /// <summary>
-        /// Check if specified path is exist.
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        public static bool Exists(string path)
-        {
-            return File.Exists(path) || Directory.Exists(path);
+            return Directory.EnumerateFileSystemEntries(path, "*", SearchOption.AllDirectories)
+                .Any(x => IsReadOnly(x, false));
         }
 
         /// <summary>
         /// Removes read-only attribute from path.
         /// </summary>
-        /// <param name="targetPath"></param>
-        /// <param name="recursive"></param>
+        /// <param name="targetPath">Full path to directory or file.</param>
+        /// <param name="recursive">If the specified path is a directory, remove all file system from read-only attribute.</param>
         public static void RemoveReadOnly(string targetPath, bool recursive = false)
         {
             var attr = File.GetAttributes(targetPath);
@@ -66,8 +68,7 @@ namespace Moviebase.Core.Utils
             }
 
             if (!IsDirectory(targetPath) || !recursive) return;
-            var items = Directory.GetFileSystemEntries(targetPath, "*", SearchOption.AllDirectories);
-            foreach (string item in items)
+            foreach (var item in Directory.EnumerateFileSystemEntries(targetPath, "*", SearchOption.AllDirectories))
             {
                 RemoveReadOnly(item);
             }
@@ -76,16 +77,13 @@ namespace Moviebase.Core.Utils
         /// <summary>
         /// Safely delete specified path.
         /// </summary>
-        /// <param name="path"></param>
-        /// <param name="recursive"></param>
-        /// <param name="ignoreReadonly"></param>
+        /// <param name="path">Full path to delete.</param>
+        /// <param name="recursive">Recrusively delete all folders from parent path.</param>
+        /// <param name="ignoreReadonly">Ignore read-only attribute.</param>
         public static void SafeDelete(string path, bool recursive = false, bool ignoreReadonly = false)
         {
             if (!Exists(path)) return;
-            if (ignoreReadonly)
-            {
-                RemoveReadOnly(path, recursive);
-            }
+            if (ignoreReadonly) RemoveReadOnly(path, recursive);
 
             if (IsDirectory(path))
             {
@@ -97,27 +95,26 @@ namespace Moviebase.Core.Utils
             }
         }
 
+        /// <summary>
+        /// Clone <paramref name="sourcePath"/> into <paramref name="targetPath"/> preserving directory structure.
+        /// </summary>
+        /// <param name="sourcePath">Source path to clone.</param>
+        /// <param name="targetPath">Destination path to place cloned path.</param>
+        /// <remarks>All files on <paramref name="targetPath"/> will be overwritten.</remarks>
         public static void CloneDirectoryStructure(string sourcePath, string targetPath)
         {
             if (IsDirectory(sourcePath))
             {
-                if (Exists(targetPath))
-                {
-                    SafeDelete(targetPath, true, true);
-                }
+                if (Exists(targetPath)) SafeDelete(targetPath, true, true);
                 Directory.CreateDirectory(targetPath);
-
-                // Create all of the directories
-                foreach (string dirPath in Directory.GetDirectories(sourcePath, "*",
-                    SearchOption.AllDirectories))
-                {
-                    Directory.CreateDirectory(dirPath.Replace(sourcePath, targetPath));
-                }
-
+                
                 //Copy all the files & Replaces any files with the same name
-                foreach (string newPath in Directory.GetFiles(sourcePath, "*.*",
-                    SearchOption.AllDirectories))
+                foreach (var newPath in Directory.EnumerateFiles(sourcePath, "*.*", SearchOption.AllDirectories))
                 {
+                    var currentPath = Path.GetDirectoryName(newPath);
+                    Debug.Assert(currentPath != null, "currentPath != null");
+                    if (!Directory.Exists(currentPath)) Directory.CreateDirectory(currentPath);
+
                     File.Copy(newPath, newPath.Replace(sourcePath, targetPath), true);
                 }
             }
@@ -131,7 +128,11 @@ namespace Moviebase.Core.Utils
         /// Hash the specified file using MD5.
         /// </summary>
         /// <param name="filePath">Full path to file.</param>
-        /// <returns></returns>
+        /// <returns><see cref="string"/> representation of current file hash.</returns>
+        /// <remarks>
+        /// The file is hashed using a maximum buffer of 1024 * 4096 bytes. The hashing algorithm used is MD5.
+        /// The resulting hash bytes is converted using <see cref="BitConverter"/>.
+        /// </remarks>
         public static string QuickHash(string filePath)
         {
             using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
@@ -149,11 +150,11 @@ namespace Moviebase.Core.Utils
         /// <summary>
         /// Clean filename from invalid characters.
         /// </summary>
-        /// <param name="fileName">Full path to file.</param>
-        /// <returns>Path friendly string.</returns>
-        public static string CleanFileName(string fileName)
+        /// <param name="filePath">Full path to file.</param>
+        /// <returns>Path friendly string with stripped invalid path characters.</returns>
+        public static string CleanFilePath(string filePath)
         {
-            var pathTokens = fileName.Split(new[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
+            var pathTokens = filePath.Split(new[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < pathTokens.Length; i++)
             {
                 var token = pathTokens[i];

@@ -9,6 +9,8 @@ namespace Moviebase.DAL.Entities
         public string Hash { get; set; }
         public DateTime LastSync { get; set; }
         public string FullPath { get; set; }
+        public string SubtitlePath { get; set; }
+        public string PosterPath { get; set; }
 
         public int TmdbId { get; set; }
         public int Episode { get; set; }

@@ -67,7 +67,7 @@ namespace Moviebase.Core
 
             if (analyzedFile.IsKnown)
             {
-                movie = GetMovieFromDatabase(analyzedFile.ImdbId);
+                movie = GetMovieByImdbId(analyzedFile.ImdbId);
                 Log.Debug("Use local movie information");
             }
             else
@@ -78,6 +78,12 @@ namespace Moviebase.Core
 
             // sync database
             RecordScanFile(movie, analyzedFile);
+        }
+
+        /// <inheritdoc />
+        public async Task SynchronizeAsync(CancellationToken? cancellationToken = null)
+        {
+            
         }
 
         /// <inheritdoc />

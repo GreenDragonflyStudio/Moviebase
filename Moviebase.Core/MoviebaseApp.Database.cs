@@ -8,6 +8,7 @@ namespace Moviebase.Core
 {
     public sealed partial class MoviebaseApp
     {
+        // map specified TMDB movie object to Moviebase's DAL Movie object
         private Movie MapMovieToEntity(TMDbLib.Objects.Movies.Movie match)
         {
             return new Movie
@@ -25,7 +26,6 @@ namespace Moviebase.Core
                 Genres = match.Genres.Select(g => new Genre { Id = g.Id, Name = g.Name }).ToList(),
 
                 ImageUri = _apiClient.GetImageUrl("w185", match.PosterPath).ToString(),
-                PosterPath = match.PosterPath,
                 OriginalLanguage = match.OriginalLanguage,
                 OriginalTitle = match.OriginalTitle,
                 Popularity = match.Popularity,
@@ -34,7 +34,8 @@ namespace Moviebase.Core
             };
         }
 
-        private Movie GetMovieFromDatabase(string imdbId)
+        // lookup Movie info from IMDB ID
+        private Movie GetMovieByImdbId(string imdbId)
         {
             using (var db = new LiteDatabase(GlobalSettings.Default.ConnectionString))
             {
@@ -43,6 +44,7 @@ namespace Moviebase.Core
             }
         }
 
+        // record specified folder to folder table
         private void RecordScanFolder(string path)
         {
             using (var db = new LiteDatabase(GlobalSettings.Default.ConnectionString))
@@ -57,6 +59,7 @@ namespace Moviebase.Core
             }
         }
 
+        // record specified file to media file table and hash table
         private void RecordScanFile(Movie movie, AnalyzedFile file)
         {
             using (var db = new LiteDatabase(GlobalSettings.Default.ConnectionString))

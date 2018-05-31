@@ -6,7 +6,6 @@ using LiteDB;
 using Moviebase.Core.Utils;
 using Moviebase.DAL;
 using Moviebase.DAL.Entities;
-using Ninject.Planning.Targets;
 
 namespace Moviebase.Core.Components
 {
@@ -36,19 +35,25 @@ namespace Moviebase.Core.Components
         {
             // trasnform path
             var originalPath = media.FullPath;
-            var targetPath = _fileNameTokenizer.GetTokenizedFilePath(originalPath, new PathToken(media, LookupMovie(media)));
-            var targetDir = Path.GetDirectoryName(targetPath);
-            Trace.Assert(targetDir != null);
 
-            // move
+            // apply path transformation
+            string targetPath;
+            targetPath = _fileNameTokenizer.GetTokenizedFilePath(originalPath, new PathToken(media, LookupMovie(media)));
+            targetPath = IOExtension.CleanFilePath(targetPath);
             targetPath = IOExtension.EnsureNonDuplicateName(targetPath, out int duplicateCount);
             Log.InfoFormat("Target path sanitized. Possible {0} duplicates.", duplicateCount);
 
+            // move
+            var targetDir = Path.GetDirectoryName(targetPath);
+            Trace.Assert(targetDir != null);
+            
             Directory.CreateDirectory(targetDir);
             File.Move(originalPath, targetPath);
 
-            // clean empty dir
+            // update db
             UpdateMediaFile(targetPath, media);
+
+            // clean empty dir
             _cleaner.Clean(Path.GetDirectoryName(originalPath));
             Log.InfoFormat("Media organized: {0} ==> {1}", originalPath, targetPath);
         }
