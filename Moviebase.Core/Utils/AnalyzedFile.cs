@@ -28,6 +28,10 @@ namespace Moviebase.Core.Utils
         /// File hash using MD5.
         /// </summary>
         public string Hash { get; set; }
+      
+        public string SubtitlePath { get; set; }
+
+        public string PosterPath { get; set; }
 
         /// <summary>
         /// Gets the gussed IMDB ID.

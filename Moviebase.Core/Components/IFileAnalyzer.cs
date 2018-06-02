@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Moviebase.Core.Utils;
 
 namespace Moviebase.Core.Components
@@ -8,6 +9,10 @@ namespace Moviebase.Core.Components
     /// </summary>
     public interface IFileAnalyzer
     {
+        List<string> SubtitleExtensions { get; set; }
+
+        List<string> PosterExtensions { get; set; }
+
         /// <summary>
         /// Analyze specified file for raw metadata.
         /// </summary>

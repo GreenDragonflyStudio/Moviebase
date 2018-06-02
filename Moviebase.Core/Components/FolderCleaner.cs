@@ -1,7 +1,6 @@
 using System.IO;
 using log4net;
 using Moviebase.Core.Utils;
-using Moviebase.DAL;
 
 namespace Moviebase.Core.Components
 {
@@ -13,7 +12,6 @@ namespace Moviebase.Core.Components
         /// <inheritdoc />
         public void Clean(string path)
         {
-            if (!GlobalSettings.Default.DeleteEmptyFolders) return;
             if (!Directory.Exists(path)) return;
             var deleted = 0;
 

@@ -46,9 +46,6 @@
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Security" />
@@ -66,15 +63,13 @@
   <ItemGroup>
     <Compile Include="App\IMoviebaseDAL.cs" />
     <Compile Include="App\MoviebaseDAL.cs" />
-    <Compile Include="Components\DirectoryScanner.cs" />
-    <Compile Include="Components\IDirectoryScanner.cs" />
-    <Compile Include="Components\PathTokenizer.cs" />
+    <Compile Include="Components\PathTransformer.cs" />
     <Compile Include="Utils\AnalyzedFile.cs" />
     <Compile Include="Components\FileAnalyzer.cs" />
     <Compile Include="Components\IFileAnalyzer.cs" />
     <Compile Include="Components\FileOrganizer.cs" />
     <Compile Include="Components\FolderCleaner.cs" />
-    <Compile Include="Components\IPathTokenizer.cs" />
+    <Compile Include="Components\IPathTransformer.cs" />
     <Compile Include="Components\IFileOrganizer.cs" />
     <Compile Include="Components\IFolderCleaner.cs" />
     <Compile Include="Components\FileScanner.cs" />

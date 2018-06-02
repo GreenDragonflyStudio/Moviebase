@@ -15,20 +15,12 @@ namespace Moviebase
     /// </summary>
     public partial class App : Application
     {
-        public static readonly IKernel Kernel = new StandardKernel(new MoviebaseModule());
-
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
-            // container
-            Kernel.Components.Add<IPlanningStrategy, AutoNotifyInterceptorRegistrationStrategy>();
-            
-            Kernel.Bind<CollectionViewModel>().ToSelf();
-            
-            // window
-            Current.MainWindow = Kernel.Get<MainWindow>();
-            Current.MainWindow.Show();
+            MainWindow = new Views.MainWindow();
+            MainWindow.Show();
         }
     }
 }

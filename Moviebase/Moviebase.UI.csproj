@@ -77,6 +77,9 @@
   <PropertyGroup>
     <ApplicationIcon>Properties\app.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Moviebase.App</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\packages\Castle.Core.4.2.0\lib\net45\Castle.Core.dll</HintPath>
@@ -259,6 +262,10 @@
     <ProjectReference Include="..\Moviebase.DAL\Moviebase.DAL.csproj">
       <Project>{90394018-92BA-45D8-8BB3-ABBF2BE9F84C}</Project>
       <Name>Moviebase.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Moviebase.Services\Moviebase.Services.csproj">
+      <Project>{7616227E-2375-4481-97A1-F3F246A798EC}</Project>
+      <Name>Moviebase.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
