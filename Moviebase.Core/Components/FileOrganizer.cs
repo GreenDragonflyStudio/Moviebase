@@ -14,48 +14,61 @@ namespace Moviebase.Core.Components
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(FileOrganizer));
         private readonly IFolderCleaner _cleaner;
-        private readonly IPathTokenizer _fileNameTokenizer;
+        private readonly IPathTransformer _fileNameTransformer;
+
+        /// <inheritdoc />
+        public bool DeleteEmptyDirectories { get; set; }
 
         /// <summary>
         /// Initialize new instance of <see cref="FileOrganizer"/>.
         /// </summary>
         /// <param name="cleaner">Folder cleaner instance.</param>
-        /// <param name="fileNameTokenizer">Path tokenizer instance.</param>
-        public FileOrganizer(IFolderCleaner cleaner, IPathTokenizer fileNameTokenizer)
+        /// <param name="fileNameTransformer">Path tokenizer instance.</param>
+        public FileOrganizer(IFolderCleaner cleaner, IPathTransformer fileNameTransformer)
         {
             _cleaner = cleaner;
-            _fileNameTokenizer = fileNameTokenizer;
-
-            _fileNameTokenizer.TokenTemplate = GlobalSettings.Default.RenameTemplate;
-            _fileNameTokenizer.TargetPath = GlobalSettings.Default.TargetPath;
+            _fileNameTransformer = fileNameTransformer;
         }
 
         /// <inheritdoc />
         public void Organize(MediaFile media)
         {
-            // trasnform path
+            // trasnform moviePath
             var originalPath = media.FullPath;
-
-            // apply path transformation
-            string targetPath;
-            targetPath = _fileNameTokenizer.GetTokenizedFilePath(originalPath, new PathToken(media, LookupMovie(media)));
-            targetPath = IOExtension.CleanFilePath(targetPath);
-            targetPath = IOExtension.EnsureNonDuplicateName(targetPath, out int duplicateCount);
-            Log.InfoFormat("Target path sanitized. Possible {0} duplicates.", duplicateCount);
-
-            // move
-            var targetDir = Path.GetDirectoryName(targetPath);
-            Trace.Assert(targetDir != null);
+            var moviePath = TransformPath(media);
             
+            // target
+            var targetDir = Path.GetDirectoryName(moviePath);
+            Trace.Assert(targetDir != null);
             Directory.CreateDirectory(targetDir);
-            File.Move(originalPath, targetPath);
+
+            // apply moviePath transformation
+            var subtitlePath = Path.Combine(targetDir, Path.GetFileName(media.SubtitlePath));
+            var posterPath = Path.Combine(targetDir, Path.GetFileName(media.PosterPath));
+            
+            // move movie, sub, poster
+            File.Move(media.FullPath, moviePath);
+            File.Move(media.SubtitlePath, subtitlePath);
+            File.Move(media.PosterPath, posterPath);
 
             // update db
-            UpdateMediaFile(targetPath, media);
+            UpdateMediaFile(moviePath, subtitlePath, posterPath, media);
 
             // clean empty dir
-            _cleaner.Clean(Path.GetDirectoryName(originalPath));
-            Log.InfoFormat("Media organized: {0} ==> {1}", originalPath, targetPath);
+            if (DeleteEmptyDirectories) _cleaner.Clean(Path.GetDirectoryName(originalPath));
+            Log.InfoFormat("Media organized: {0} ==> {1}", originalPath, moviePath);
+        }
+
+        private string TransformPath(MediaFile media)
+        {
+            string moviePath;
+            moviePath = _fileNameTransformer.GetTokenizedFilePath(media.FullPath,
+                new PathToken(media, LookupMovie(media)));
+            moviePath = IOExtension.CleanFilePath(moviePath);
+            moviePath = IOExtension.EnsureNonDuplicateName(moviePath, out int duplicateCount);
+            Log.InfoFormat("Target moviePath sanitized. Possible {0} duplicates.", duplicateCount);
+
+            return moviePath;
         }
 
         // lookup associated movie from media in database
@@ -68,14 +81,16 @@ namespace Moviebase.Core.Components
             }
         }
 
-        // update media with new path
-        private void UpdateMediaFile(string path, MediaFile media)
+        // update media with new moviePath
+        private void UpdateMediaFile(string moviePath, string subPath, string posterPath, MediaFile media)
         {
             using (var db = new LiteDatabase(GlobalSettings.Default.ConnectionString))
             {
                 var mediaCollection = db.GetCollection<MediaFile>();
-                media.FullPath = path;
                 media.LastSync = DateTime.Now;
+                media.FullPath = moviePath;
+                media.SubtitlePath = subPath;
+                media.PosterPath = posterPath;
 
                 mediaCollection.Update(media);
                 mediaCollection.EnsureIndex(x => x.Id);

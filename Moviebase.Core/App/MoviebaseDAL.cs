@@ -49,21 +49,6 @@ namespace Moviebase.Core.App
         }
 
         /// <inheritdoc />
-        public void RecordScanFolder(string path)
-        {
-            using (var db = new LiteDatabase(GlobalSettings.Default.ConnectionString))
-            {
-                var collection = db.GetCollection<Folder>();
-                var entity = collection.FindOne(x => x.Path == path) ?? new Folder();
-                entity.Path = path;
-                entity.LastSync = DateTime.Now;
-                entity.Synced = true;
-
-                collection.Upsert(entity);
-            }
-        }
-
-        /// <inheritdoc />
         public void RecordScanFile(AnalyzedFile file, Movie movie)
         {
             using (var db = new LiteDatabase(GlobalSettings.Default.ConnectionString))
@@ -94,18 +79,5 @@ namespace Moviebase.Core.App
             }
         }
 
-        /// <inheritdoc />
-        public void RecordExtraFile(AnalyzedFile file, string subtitlePath, string posterPath)
-        {
-            using (var db = new LiteDatabase(GlobalSettings.Default.ConnectionString))
-            {
-                var mediaCollection = db.GetCollection<MediaFile>();
-                var entity = mediaCollection.FindOne(x => x.FullPath == file.FullPath);
-                entity.SubtitlePath = subtitlePath;
-                entity.PosterPath = posterPath;
-
-                mediaCollection.EnsureIndex(x => x.Id);
-            }
-        }
     }
 }

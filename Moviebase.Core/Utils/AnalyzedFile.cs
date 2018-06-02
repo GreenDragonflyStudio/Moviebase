@@ -29,6 +29,10 @@ namespace Moviebase.Core.Utils
         /// </summary>
         public string Hash { get; set; }
 
+        public string SubtitlePath { get; set; }
+
+        public string PosterPath { get; set; }
+
         /// <summary>
         /// Gets the gussed IMDB ID.
         /// </summary>

@@ -7,6 +7,8 @@ namespace Moviebase.Core.Components
     /// </summary>
     public interface IFileOrganizer
     {
+        bool DeleteEmptyDirectories { get; set; }
+
         /// <summary>
         /// Organize specified <paramref name="media"/>.
         /// </summary>

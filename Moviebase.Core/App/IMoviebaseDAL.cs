@@ -32,18 +32,5 @@ namespace Moviebase.Core.App
         /// <param name="movie"><see cref="Movie"/> object associated with specified <see cref="AnalyzedFile"/> object.</param>
         void RecordScanFile(AnalyzedFile file, Movie movie);
 
-        /// <summary>
-        /// Record specified directory path to Folder table.
-        /// </summary>
-        /// <param name="path">Full path to directory.</param>
-        void RecordScanFolder(string path);
-
-        /// <summary>
-        /// Record spcified extra file information to MediaFile table.
-        /// </summary>
-        /// <param name="file"><see cref="AnalyzedFile"/> object representing current file.</param>
-        /// <param name="subtitlePath">Full path to associated subtitle path.</param>
-        /// <param name="posterPath">Full path to associated poster path.</param>
-        void RecordExtraFile(AnalyzedFile file, string subtitlePath, string posterPath);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Moviebase.ViewModels;
 using System.Windows.Controls;
-using Ninject;
 
 namespace Moviebase.Views
 {
@@ -12,8 +11,7 @@ namespace Moviebase.Views
         public CollectionView()
         {
             InitializeComponent();
-            var viewModel = App.Kernel.Get<CollectionViewModel>();
-            this.DataContext = viewModel;
+            this.DataContext = new CollectionViewModel();
         }
 
         private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)

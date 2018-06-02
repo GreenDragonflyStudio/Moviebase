@@ -77,10 +77,10 @@
   <PropertyGroup>
     <ApplicationIcon>Properties\app.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Moviebase.App</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\packages\Castle.Core.4.2.0\lib\net45\Castle.Core.dll</HintPath>
-    </Reference>
     <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net45\ControlzEx.dll</HintPath>
     </Reference>
@@ -92,15 +92,6 @@
     </Reference>
     <Reference Include="MahApps.Metro.IconPacks.Material, Version=2.2.0.12, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.IconPacks.Material.2.2.0\lib\net45\MahApps.Metro.IconPacks.Material.dll</HintPath>
-    </Reference>
-    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
-    </Reference>
-    <Reference Include="Ninject.Extensions.Interception, Version=3.3.3.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Ninject.Extensions.Interception.3.3.3\lib\net45\Ninject.Extensions.Interception.dll</HintPath>
-    </Reference>
-    <Reference Include="Ninject.Extensions.Interception.DynamicProxy, Version=3.3.3.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Ninject.Extensions.Interception.DynamicProxy.3.3.3\lib\net45\Ninject.Extensions.Interception.DynamicProxy.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -129,7 +120,6 @@
     <Compile Include="Converters\GenresToStringConverter.cs" />
     <Compile Include="Converters\SelectedItemToContentConverter.cs" />
     <Compile Include="Converters\ZeroToNullConverter.cs" />
-    <Compile Include="Helper\MoviebaseUIModule.cs" />
     <Compile Include="Helper\Navigation.cs" />
     <Compile Include="Helper\NotificationProvider.cs" />
     <Compile Include="ViewModels\AboutViewModel.cs" />
@@ -259,6 +249,10 @@
     <ProjectReference Include="..\Moviebase.DAL\Moviebase.DAL.csproj">
       <Project>{90394018-92BA-45D8-8BB3-ABBF2BE9F84C}</Project>
       <Name>Moviebase.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Moviebase.Services\Moviebase.Services.csproj">
+      <Project>{7616227E-2375-4481-97A1-F3F246A798EC}</Project>
+      <Name>Moviebase.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

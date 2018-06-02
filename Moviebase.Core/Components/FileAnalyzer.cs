@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using log4net;
@@ -14,6 +16,12 @@ namespace Moviebase.Core.Components
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(FileAnalyzer));
         private readonly ITitleProvider _provider;
+
+        /// <inheritdoc />
+        public List<string> SubtitleExtensions { get; set; }
+
+        /// <inheritdoc />
+        public List<string> PosterExtensions { get; set; }
 
         /// <summary>
         /// Initialize new instance of <see cref="FileAnalyzer"/>.
@@ -64,7 +72,31 @@ namespace Moviebase.Core.Components
                 }
             }
 
+            // find subtitle and poster
+            var extraFile = FindAssociatedFiles(Path.GetDirectoryName(filePath));
+            item.SubtitlePath = extraFile.Item1;
+            item.PosterPath = extraFile.Item2;
+            
             return item;
         }
+
+        private Tuple<string, string> FindAssociatedFiles(string path)
+        {
+            string subtitle = null, poster = null;
+            foreach (var file in Directory.EnumerateFiles(path, "*", SearchOption.TopDirectoryOnly))
+            {
+                var currentExtension = Path.GetExtension(file);
+                if (SubtitleExtensions.Contains(currentExtension))
+                    subtitle = file;
+                if (PosterExtensions.Contains(currentExtension))
+                    poster = file;
+
+                // early break
+                if (subtitle != null && poster != null) break;
+            }
+
+            return new Tuple<string, string>(subtitle, poster);
+        }
+        
     }
 }

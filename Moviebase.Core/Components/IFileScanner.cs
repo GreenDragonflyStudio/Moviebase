@@ -8,24 +8,15 @@ namespace Moviebase.Core.Components
     public interface IFileScanner
     {
         /// <summary>
+        /// Gets or sets movie file detection based on file extension.
+        /// </summary>
+        List<string> MovieExtensions { get; set; }
+
+        /// <summary>
         /// Search for movie files in specified <paramref name="path"/>.
         /// </summary>
         /// <param name="path">Full path to directory to be scanned.</param>
         /// <returns><see cref="IEnumerable{T}"/> of file paths.</returns>
         IEnumerable<string> ScanMovie(string path);
-
-        /// <summary>
-        /// Search for subtitle files in specified <paramref name="path"/>.
-        /// </summary>
-        /// <param name="path">Full path to directory to be scanned.</param>
-        /// <returns><see cref="IEnumerable{T}"/> of file paths.</returns>
-        IEnumerable<string> ScanSubtitle(string path);
-
-        /// <summary>
-        /// Search for poster images files in specified <paramref name="path"/>.
-        /// </summary>
-        /// <param name="path">Full path to directory to be scanned.</param>
-        /// <returns><see cref="IEnumerable{T}"/> of file paths.</returns>
-        IEnumerable<string> ScanPoster(string path);
     }
 }

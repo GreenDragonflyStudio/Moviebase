@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Moviebase.DAL.Entities;
 
-namespace Moviebase.Core.Components
+namespace Moviebase.Core
 {
     /// <summary>
     /// Defines token informations.

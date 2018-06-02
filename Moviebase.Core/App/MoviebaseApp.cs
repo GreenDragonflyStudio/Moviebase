@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,6 +9,7 @@ using LiteDB;
 using Moviebase.Core.Components;
 using Moviebase.DAL;
 using Moviebase.DAL.Entities;
+using Moviebase.Services.Title;
 using TMDbLib.Client;
 
 namespace Moviebase.Core.App
@@ -15,38 +18,54 @@ namespace Moviebase.Core.App
     public sealed partial class MoviebaseApp : IMoviebaseApp
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(MoviebaseApp));
+        private static readonly Lazy<IMoviebaseApp> AppLazy = new Lazy<IMoviebaseApp>(() => new MoviebaseApp());
+
         private readonly TMDbClient _apiClient;
         private readonly IMoviebaseDAL _dal;
         private readonly IFileScanner _fileScanner;
-        private readonly IDirectoryScanner _directoryScanner;
         private readonly IFileAnalyzer _analyzer;
         private readonly IFileOrganizer _fileOrganizer;
+        private readonly IPathTransformer _pathTransformer;
 
         /// <inheritdoc />
         public event ProgressChangedEventHandler ProgressChanged;
 
         /// <summary>
+        /// Gets current instance of <see cref="MoviebaseApp"/>.
+        /// </summary>
+        public static IMoviebaseApp Instance => AppLazy.Value;
+
+        /// <summary>
         /// Initialize new instance of <see cref="MoviebaseApp"/>.
         /// </summary>
-        /// <param name="fileScanner">File scanner.</param>
-        /// <param name="analyzer">File analyzer.</param>
-        /// <param name="organizer">File organizer.</param>
-        /// <param name="directoryScanner">Directory scanner.</param>
-        /// <param name="dal">Moviebase database access.</param>
-        public MoviebaseApp(IFileScanner fileScanner, IFileAnalyzer analyzer, IFileOrganizer organizer,
-            IDirectoryScanner directoryScanner, IMoviebaseDAL dal)
+        private MoviebaseApp()
         {
-            _fileScanner = fileScanner;
-            _analyzer = analyzer;
-            _fileOrganizer = organizer;
-            _directoryScanner = directoryScanner;
-            _dal = dal;
+            _dal = new MoviebaseDAL();
+            _pathTransformer = new PathTransformer();
 
-            _apiClient = new TMDbClient(GlobalSettings.Default.ApiKey)
-            {
-                DefaultLanguage = "id",
-                DefaultCountry = "ID"
-            };
+            _fileScanner = new FileScanner();
+            _analyzer = new FileAnalyzer(new CompositeTitleProvider());
+            _fileOrganizer = new FileOrganizer(new FolderCleaner(), _pathTransformer);
+
+            _apiClient = new TMDbClient(GlobalSettings.Default.ApiKey);
+
+            ReloadSettings();
+        }
+
+        /// <inheritdoc />
+        public void ReloadSettings()
+        {
+            var settings = GlobalSettings.Default;
+            
+            _pathTransformer.TargetPath = settings.TargetPath;
+            _pathTransformer.TokenTemplate = settings.RenameTemplate;
+            _analyzer.PosterExtensions = new List<string> {"jpg", "png"};
+            _analyzer.SubtitleExtensions = new List<string> {"srt", "ass", "ssa"};
+            _fileScanner.MovieExtensions = new List<string> {"mkv", "mp4", "avi"};
+            _fileOrganizer.DeleteEmptyDirectories = true;
+
+            _apiClient.DefaultCountry = "ID";
+            _apiClient.DefaultLanguage = "id";
         }
 
         /// <inheritdoc />
@@ -62,8 +81,6 @@ namespace Moviebase.Core.App
                 await ScanFileAsync(files[i]);
                 OnProgressChanged(i, totalItems);
             }
-
-            _dal.RecordScanFolder(scanPath);
         }
 
         /// <inheritdoc />
@@ -85,31 +102,6 @@ namespace Moviebase.Core.App
 
             // sync database
             _dal.RecordScanFile(analyzedFile, movie);
-        }
-
-        /// <inheritdoc />
-        public async Task AssociateAsync(CancellationToken? cancellationToken = null)
-        {
-            var dirs = _directoryScanner.EnumerateDirectories().ToList();
-            var totalItems = dirs.Count;
-
-            for (int i = 0; i < dirs.Count; i++)
-            {
-                // cancellation
-                var dir = dirs[i];
-                if (cancellationToken?.IsCancellationRequested == true) break;
-
-                // scan movie
-                var files = _fileScanner.ScanMovie(dir).ToList();
-                if (!files.Any()) continue;
-
-                // record
-                var analyzedFile = await _analyzer.Analyze(files.First());
-                _dal.RecordExtraFile(analyzedFile, _fileScanner.ScanSubtitle(dir).FirstOrDefault(),
-                    _fileScanner.ScanPoster(dir).FirstOrDefault());
-
-                OnProgressChanged(i, totalItems);
-            }
         }
 
         /// <inheritdoc />
