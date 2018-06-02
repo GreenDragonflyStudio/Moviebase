@@ -8,7 +8,9 @@ An opensource movie management tool, subtitle downloader and metadata editor.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+Moviebase is a movie organizer aimed to help users manage their movie collection form many sources.
+
+please aware that we don't take any responsibility of every movie/subtitle/ others that you illegally download. we just provide tools.
 
 ### Prerequisites
 
