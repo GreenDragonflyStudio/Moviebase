@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -26,7 +26,7 @@ namespace Moviebase.Core.App
         private readonly IFileScanner _fileScanner;
         private readonly IFileAnalyzer _fileAnalyzer;
         private readonly IFileOrganizer _fileOrganizer;
-        
+
         /// <inheritdoc />
         public event ProgressChangedEventHandler ProgressChanged;
 

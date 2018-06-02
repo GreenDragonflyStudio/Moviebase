@@ -1,4 +1,12 @@
 ﻿using System.Windows;
+using Moviebase.Core;
+using Moviebase.Core.App;
+using Moviebase.Core.Components;
+using Moviebase.ViewModels;
+using Ninject;
+using Ninject.Extensions.Interception;
+using Ninject.Extensions.Interception.Planning.Strategies;
+using Ninject.Planning.Strategies;
 
 namespace Moviebase
 {

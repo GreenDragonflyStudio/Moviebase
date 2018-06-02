@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 using LiteDB;
 using Moviebase.Core.App;
@@ -68,6 +68,12 @@ namespace Moviebase.ViewModels
                     Movies.Add(movie);
                 }
             }
+        }
+
+        private void AddCommand_Handler()
+        {
+            // show dialog to browse single movie file
+            _app.ScanFileAsync("");
         }
     }
 }

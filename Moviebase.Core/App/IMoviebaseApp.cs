@@ -33,7 +33,7 @@ namespace Moviebase.Core.App
         /// <param name="filePath">Full path to movie file.</param>
         /// <returns><see cref="Task"/> object of current process.</returns>
         Task ScanFileAsync(string filePath);
-        
+
         /// <summary>
         /// Organize files on database to designated folder.
         /// </summary>

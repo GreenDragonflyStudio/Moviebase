@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moviebase.Core.Utils;
 
@@ -12,7 +12,6 @@ namespace Moviebase.Core.Components
         List<string> SubtitleExtensions { get; set; }
 
         List<string> PosterExtensions { get; set; }
-
 
         /// <summary>
         /// Analyze specified file for raw metadata.

@@ -1,5 +1,6 @@
 ﻿using Moviebase.ViewModels;
 using System.Windows.Controls;
+using Ninject;
 
 namespace Moviebase.Views
 {

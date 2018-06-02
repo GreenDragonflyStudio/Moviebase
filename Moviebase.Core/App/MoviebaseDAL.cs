@@ -78,6 +78,5 @@ namespace Moviebase.Core.App
                 mediaCollection.Upsert(mediaEntity);
             }
         }
-
     }
 }

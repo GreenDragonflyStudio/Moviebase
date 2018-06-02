@@ -3,13 +3,16 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using Ninject.Extensions.Interception;
+using Ninject.Extensions.Interception.Attributes;
 
 namespace Moviebase.ViewModels
 {
     /// <summary>
     /// Implementation of <see cref="INotifyPropertyChanged"/> to simplify models.
     /// </summary>
-    public abstract class BindableBase : INotifyPropertyChanged
+    [NotifyOfChanges]
+    public abstract class BindableBase : IAutoNotifyPropertyChanged
     {
         /// <summary>
         /// Multicast event for property change notifications.

@@ -97,6 +97,5 @@ namespace Moviebase.Core.Components
 
             return new Tuple<string, string>(subtitle, poster);
         }
-        
     }
 }
