@@ -5,9 +5,9 @@ namespace Moviebase.Views.Settings
     /// <summary>
     /// Interaction logic for SettingIntegration.xaml
     /// </summary>
-    public partial class SettingIntegration : UserControl
+    public partial class SettingIntegrationView : UserControl
     {
-        public SettingIntegration()
+        public SettingIntegrationView()
         {
             InitializeComponent();
         }

@@ -121,12 +121,6 @@
                     <ColumnDefinition />
                     <ColumnDefinition Width="108" />
                 </Grid.ColumnDefinitions>
-                <TextBlock x:Name="Header"
-                                       HorizontalAlignment="Left"
-                                       VerticalAlignment="Center"
-                                       FontSize="18"
-                                       Foreground="#FF0D6822"
-                                       Text="MOVIEBASE" Margin="8,0,0,0" FontFamily="Arial" />
                 <Grid Grid.Column="1"  Background="Green">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />

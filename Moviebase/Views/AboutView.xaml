@@ -20,11 +20,11 @@
         </Grid.RowDefinitions>
         <TextBlock Margin="10,126,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Credits" VerticalAlignment="Top" FontSize="16" HorizontalAlignment="Left" />
         <TextBlock HorizontalAlignment="Left" Margin="10,10,0,-21" TextWrapping="Wrap" FontSize="16" Width="680"><Run FontWeight="Bold" Text="MOVIEBASE" /><LineBreak /><Span><Run Text="Copyright " /></Span><Span FontSize="17.3333333333333" FontFamily="Arial"><Run Text="©" /></Span><Span><Run Text=" 2018 Green Dragonfly Studio" /></Span><LineBreak /><LineBreak /></TextBlock>
-        <ListBox Margin="10,152,10,202" Grid.Row="1" Background="{x:Null}">
+        <ListBox Margin="10,152,0,10" Grid.Row="1" Background="{x:Null}" HorizontalAlignment="Left" Width="369">
             <ListBoxItem Content="FahmiNLB's Moviebase Inspirations" />
             <ListBoxItem Content="MahApps Metro Framework" />
             <ListBoxItem Content="Visual Studio Team" />
         </ListBox>
-        <TextBlock HorizontalAlignment="Left" Margin="27,21,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="16"  ><Run  Text="Version " /><Run Text="{Binding AppVersion,Mode=OneWay}" /></TextBlock>
+        <TextBlock HorizontalAlignment="Left" Margin="57,26,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="16"  ><Run  Text="Version " /><Run Text="{Binding AppVersion,Mode=OneWay}" /></TextBlock>
     </Grid>
 </UserControl>

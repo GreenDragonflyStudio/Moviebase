@@ -1,4 +1,4 @@
-﻿<UserControl
+﻿<UserControl xmlns:Settings="clr-namespace:Moviebase.Views.Settings"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -6,17 +6,14 @@
              xmlns:local="clr-namespace:Moviebase.Views"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls" x:Class="Moviebase.Views.SettingsView"
              mc:Ignorable="d"
-             d:DesignHeight="341" d:DesignWidth="659">
+             d:DesignHeight="341" d:DesignWidth="798.158">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="659" />
-        </Grid.ColumnDefinitions>
-        <TabControl x:Name="listBox" mah:TabControlHelper.Underlined="SelectedTabItem" mah:TabControlHelper.IsUnderlined="True" TabStripPlacement="Top">
+        <TabControl x:Name="listBox" mah:TabControlHelper.Underlined="TabPanel" TabStripPlacement="Top">
             <TabItem Header="Connection">
-                <Grid />
+                <Settings:SettingConnectionView />
             </TabItem>
             <TabItem Header="Integration">
-                <Grid />
+                 <Settings:SettingIntegrationView />
             </TabItem>
             <TabItem Header="Backups">
                 <Grid />

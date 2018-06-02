@@ -18,5 +18,9 @@ namespace Moviebase.ViewModels
                 OnPropertyChanged("NotificationCollection");
             }
         }
+
+        public int CollectionCount { get; set; }
+        public int ObservedFolderCount { get; set; }
+        public int UnsyncedCount { get; set; }
     }
 }

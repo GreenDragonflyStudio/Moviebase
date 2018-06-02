@@ -56,13 +56,13 @@ namespace Moviebase.Core.App
         public void ReloadSettings()
         {
             var settings = GlobalSettings.Default;
-            
+
             _pathTransformer.TargetPath = settings.TargetPath;
             _pathTransformer.TokenTemplate = settings.RenameTemplate;
             _pathTransformer.SwapThe = true;
-            _fileAnalyzer.PosterExtensions = new List<string> {"jpg", "png"};
-            _fileAnalyzer.SubtitleExtensions = new List<string> {"srt", "ass", "ssa"};
-            _fileScanner.MovieExtensions = new List<string> {"mkv", "mp4", "avi"};
+            _fileAnalyzer.PosterExtensions = new List<string> { "jpg", "png" };
+            _fileAnalyzer.SubtitleExtensions = new List<string> { "srt", "ass", "ssa" };
+            _fileScanner.MovieExtensions = new List<string> { "mkv", "mp4", "avi" };
             _fileOrganizer.DeleteEmptyDirectories = true;
 
             _apiClient.DefaultCountry = "ID";
@@ -142,6 +142,6 @@ namespace Moviebase.Core.App
             ProgressChanged?.Invoke(this, e);
         }
 
-        #endregion
+        #endregion Event Invocator
     }
 }

@@ -4,6 +4,7 @@ using LiteDB;
 using Moviebase.Core.App;
 using Moviebase.DAL;
 using Moviebase.DAL.Entities;
+using Ookii.Dialogs.Wpf;
 
 namespace Moviebase.ViewModels
 {
@@ -13,7 +14,8 @@ namespace Moviebase.ViewModels
         private Movie _selectedMovie;
 
         public ObservableCollection<Movie> Movies { get; } = new ObservableCollection<Movie>();
-        public ICommand AddCommand { get; set; }
+        public ICommand AddFolderCommand { get; set; }
+        public ICommand AddFileCommand { get; set; }
         public ICommand RemoveCommand { get; set; }
 
         public Movie SelectedMovie
@@ -28,19 +30,50 @@ namespace Moviebase.ViewModels
 
         public CollectionViewModel()
         {
-            _app = MoviebaseApp.Instance;   
-
-            AddCommand = new DelegateCommand(AddCommandCallback);
+            _app = MoviebaseApp.Instance;
+            _app.ProgressChanged += _app_ProgressChanged;
+            AddFolderCommand = new DelegateCommand(AddFolderCommandCallback);
+            AddFileCommand = new DelegateCommand(AddFileCommandCallback);
             RemoveCommand = new DelegateCommand(RemoveCommandCallback);
 
             PopulateData();
         }
 
-        private void AddCommandCallback()
+        private void _app_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
-            // show dialog to browse single movie file
-            _app.ScanFileAsync(""); // add a single file
-            _app.ScanDirectoryAsync(""); // add a directory
+            if (e.ProgressPercentage == 100)
+            {
+                PopulateData();
+            }
+        }
+
+        private void AddFolderCommandCallback()
+        {
+            var a = new VistaFolderBrowserDialog();
+            a.Description = "Moviebase - Browse Observed Folder";
+            a.ShowNewFolderButton = true;
+            a.UseDescriptionForTitle = true;
+            if (a.ShowDialog() == true)
+            {
+                // show dialog to browse single movie file
+                _app.ScanDirectoryAsync(a.SelectedPath); // add a directory
+            }
+        }
+
+        private void AddFileCommandCallback()
+        {
+            var dlg = new VistaOpenFileDialog
+            {
+                Title = "Select Movie to add into collection",
+                CheckFileExists = true
+            };
+            if (dlg.ShowDialog() == true)
+            {
+                foreach (var i in dlg.FileNames)
+                {
+                    _app.ScanFileAsync(i); // add a single file
+                }
+            }
         }
 
         private void RemoveCommandCallback()
@@ -60,6 +93,7 @@ namespace Moviebase.ViewModels
         private void PopulateData()
         {
             // load data
+            Movies.Clear();
             using (var db = new LiteDatabase(GlobalSettings.Default.ConnectionString))
             {
                 var col = db.GetCollection<Movie>();
@@ -68,12 +102,6 @@ namespace Moviebase.ViewModels
                     Movies.Add(movie);
                 }
             }
-        }
-
-        private void AddCommand_Handler()
-        {
-            // show dialog to browse single movie file
-            _app.ScanFileAsync("");
         }
     }
 }
