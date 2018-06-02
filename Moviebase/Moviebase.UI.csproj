@@ -144,6 +144,8 @@
     <Compile Include="ViewModels\FolderViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="Helper\MenuItem.cs" />
+    <Compile Include="ViewModels\SettingConnectionViewModel.cs" />
+    <Compile Include="ViewModels\SettingIntegrationViewModel.cs" />
     <Compile Include="Views\Settings\SettingIntegrationView.xaml.cs">
       <DependentUpon>SettingIntegrationView.xaml</DependentUpon>
     </Compile>

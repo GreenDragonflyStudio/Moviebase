@@ -13,9 +13,9 @@
                 <Settings:SettingConnectionView />
             </TabItem>
             <TabItem Header="Integration">
-                 <Settings:SettingIntegrationView />
+                <Settings:SettingIntegrationView />
             </TabItem>
-            <TabItem Header="Backups">
+            <!--<TabItem Header="Backups">
                 <Grid />
             </TabItem>
             <TabItem Header="Synchronization">
@@ -23,7 +23,7 @@
             </TabItem>
             <TabItem Header="Update">
                 <Grid />
-            </TabItem>
+            </TabItem>-->
         </TabControl>
     </Grid>
 </UserControl>

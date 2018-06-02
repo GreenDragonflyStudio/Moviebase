@@ -27,14 +27,27 @@
         </DataTemplate>
     </UserControl.Resources>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35*" />
+            <RowDefinition Height="237*" />
+            <RowDefinition Height="228*" />
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
-            <ColumnDefinition Width="245" />
+            <ColumnDefinition Width="194" />
         </Grid.ColumnDefinitions>
-        <ListBox Margin="10,77,10,23" ItemTemplate="{StaticResource FolderItemTemplate}">
+        <ListBox Margin="10,53,10,0" ItemTemplate="{StaticResource FolderItemTemplate}" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" Background="WhiteSmoke" Grid.Row="1">
         </ListBox>
-        <TextBox Text ="{Binding FilterText, Mode=TwoWay}" Height="22" Margin="10,46,75,0" TextWrapping="Wrap" VerticalAlignment="Top" />
-        <Button Content="Go" HorizontalAlignment="Right" Margin="0,46,10,0" VerticalAlignment="Top" Width="65" Height="26" FontSize="12" />
-        <TextBlock HorizontalAlignment="Left" Margin="10,25,0,0" TextWrapping="Wrap" Text="Observed Folder" VerticalAlignment="Top" />
+        <TextBox Text ="{Binding FilterText, Mode=TwoWay}" Height="26" Margin="10,22,75,0" TextWrapping="Wrap" VerticalAlignment="Top" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" Grid.Row="1" />
+        <Button Content="Go" HorizontalAlignment="Right" Margin="0,22,10,0" VerticalAlignment="Top" Width="65" Height="26" FontSize="12" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" Grid.Row="1" />
+        <TextBlock HorizontalAlignment="Left" Margin="10,1,0,0" TextWrapping="Wrap" Text="Observed Folder" VerticalAlignment="Top" Height="16" Width="129" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" Grid.Row="1" />
+        <TextBlock HorizontalAlignment="Left" Margin="10,5,0,-2" TextWrapping="Wrap" Text="Folders" Width="92" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" FontSize="16" />
+        <ListBox Margin="10,57,10,10" ItemTemplate="{StaticResource FolderItemTemplate}" Grid.Row="2" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" Background="WhiteSmoke" />
+        <TextBox Text ="{Binding FilterText, Mode=TwoWay}" Height="26" Margin="10,26,75,0" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Row="2" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" />
+        <Button Content="Go" HorizontalAlignment="Right" Margin="0,26,10,0" VerticalAlignment="Top" Width="65" Height="26" FontSize="12" Grid.Row="2" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" />
+        <TextBlock HorizontalAlignment="Left" Margin="10,5,0,0" TextWrapping="Wrap" Text="Excluded Folder" VerticalAlignment="Top" Grid.Row="2" Height="16" Width="166" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" />
+        <Grid Grid.Column="1" Grid.RowSpan="3" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" Background="#FFECECEC">
+            <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Overview" VerticalAlignment="Top" />
+        </Grid>
     </Grid>
 </UserControl>

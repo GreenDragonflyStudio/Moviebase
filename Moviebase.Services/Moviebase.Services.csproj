@@ -54,6 +54,7 @@
     <Compile Include="Helpers\StringUtils.cs" />
     <Compile Include="Metadata\DamerauLevenshtein.cs" />
     <Compile Include="Metadata\ISubscene.cs" />
+    <Compile Include="Title\TerkaTitleProvider.cs" />
     <Compile Include="Title\TitleCleanerProvider.cs" />
     <Compile Include="Entities\GuessTitle.cs" />
     <Compile Include="Title\CompositeTitleProvider.cs" />
