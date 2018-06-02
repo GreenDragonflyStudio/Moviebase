@@ -22,11 +22,11 @@ namespace Moviebase.Core.App
 
         private readonly TMDbClient _apiClient;
         private readonly IMoviebaseDAL _dal;
-        private readonly IFileScanner _fileScanner;
-        private readonly IFileAnalyzer _analyzer;
-        private readonly IFileOrganizer _fileOrganizer;
         private readonly IPathTransformer _pathTransformer;
-
+        private readonly IFileScanner _fileScanner;
+        private readonly IFileAnalyzer _fileAnalyzer;
+        private readonly IFileOrganizer _fileOrganizer;
+        
         /// <inheritdoc />
         public event ProgressChangedEventHandler ProgressChanged;
 
@@ -44,7 +44,7 @@ namespace Moviebase.Core.App
             _pathTransformer = new PathTransformer();
 
             _fileScanner = new FileScanner();
-            _analyzer = new FileAnalyzer(new CompositeTitleProvider());
+            _fileAnalyzer = new FileAnalyzer(new CompositeTitleProvider());
             _fileOrganizer = new FileOrganizer(new FolderCleaner(), _pathTransformer);
 
             _apiClient = new TMDbClient(GlobalSettings.Default.ApiKey);
@@ -59,8 +59,9 @@ namespace Moviebase.Core.App
             
             _pathTransformer.TargetPath = settings.TargetPath;
             _pathTransformer.TokenTemplate = settings.RenameTemplate;
-            _analyzer.PosterExtensions = new List<string> {"jpg", "png"};
-            _analyzer.SubtitleExtensions = new List<string> {"srt", "ass", "ssa"};
+            _pathTransformer.SwapThe = true;
+            _fileAnalyzer.PosterExtensions = new List<string> {"jpg", "png"};
+            _fileAnalyzer.SubtitleExtensions = new List<string> {"srt", "ass", "ssa"};
             _fileScanner.MovieExtensions = new List<string> {"mkv", "mp4", "avi"};
             _fileOrganizer.DeleteEmptyDirectories = true;
 
@@ -86,7 +87,7 @@ namespace Moviebase.Core.App
         /// <inheritdoc />
         public async Task ScanFileAsync(string filePath)
         {
-            var analyzedFile = await _analyzer.Analyze(filePath);
+            var analyzedFile = await _fileAnalyzer.Analyze(filePath);
             Movie movie;
 
             if (analyzedFile.IsKnown)
