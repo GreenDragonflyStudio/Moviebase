@@ -132,7 +132,6 @@
     <Compile Include="Converters\GenresToStringConverter.cs" />
     <Compile Include="Converters\SelectedItemToContentConverter.cs" />
     <Compile Include="Converters\ZeroToNullConverter.cs" />
-    <Compile Include="Helper\MoviebaseUIModule.cs" />
     <Compile Include="Helper\Navigation.cs" />
     <Compile Include="Helper\NotificationProvider.cs" />
     <Compile Include="ViewModels\AboutViewModel.cs" />
