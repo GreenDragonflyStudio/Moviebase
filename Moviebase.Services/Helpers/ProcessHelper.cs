@@ -39,6 +39,7 @@ namespace Moviebase.Services.Helpers
                     case RedirectStream.StandardError:
                         tcs.SetResult(await process.StandardError.ReadToEndAsync());
                         break;
+
                     case RedirectStream.StandardOutput:
                         tcs.SetResult(await process.StandardOutput.ReadToEndAsync());
                         break;
@@ -48,6 +49,5 @@ namespace Moviebase.Services.Helpers
             process.Start();
             return tcs.Task;
         }
-
     }
 }

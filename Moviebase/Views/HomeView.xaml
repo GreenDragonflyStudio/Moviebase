@@ -13,7 +13,8 @@
     </UserControl.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="292" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -22,18 +23,18 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <StackPanel  Orientation="Horizontal" Height="Auto" Grid.Row="2" Margin="10,0,0,0" Grid.ColumnSpan="2" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin">
-            <mah:Tile Command="{Binding NavigateCommand}" CommandParameter="Views/CollectionView.xaml" Content="10" Title="Collections" HorizontalAlignment="Left" Margin="5,5,5,0" VerticalAlignment="Top" FontSize="24" Height="83" Width="83" Count="" CountFontSize="26" TitleFontSize="12" />
-            <mah:Tile  Command="{Binding NavigateCommand}" CommandParameter="Views/FoldersView.xaml" Content="2" Title="Folders" HorizontalAlignment="Left" Margin="5,5,5,0" VerticalAlignment="Top" FontSize="24" Height="83" Width="83" TitleFontSize="12" />
-            <mah:Tile  Command="{Binding NavigateCommand}" CommandParameter="Views/SynchronizeView.xaml" Content="3" Title="Unsynced" HorizontalAlignment="Left" Margin="5,5,5,0" VerticalAlignment="Top" FontSize="24" Height="83" Width="83" TitleFontSize="12" />
+        <StackPanel  Orientation="Horizontal" Height="Auto" Grid.Row="2" Margin="10,0,0,0" Grid.ColumnSpan="3" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin">
+            <mah:Tile Command="{Binding NavigateCommand}" CommandParameter="Views/CollectionView.xaml" Content="{Binding CollectionCount}" Title="Collections" HorizontalAlignment="Left" Margin="5,5,5,0" VerticalAlignment="Top" FontSize="24" Height="83" Width="83" Count="" CountFontSize="26" TitleFontSize="12" />
+            <mah:Tile  Command="{Binding NavigateCommand}" CommandParameter="Views/FoldersView.xaml" Content="{Binding ObservedFolderCount}" Title="Folders" HorizontalAlignment="Left" Margin="5,5,5,0" VerticalAlignment="Top" FontSize="24" Height="83" Width="83" TitleFontSize="12" />
+            <mah:Tile  Command="{Binding NavigateCommand}" CommandParameter="Views/SynchronizeView.xaml" Content="{Binding UnsyncedCount}" Title="Unsynced" HorizontalAlignment="Left" Margin="5,5,5,0" VerticalAlignment="Top" FontSize="24" Height="83" Width="83" TitleFontSize="12" />
         </StackPanel>
 
-        <Expander Header="Collections" Margin="0,5,0,0" Grid.Row="3" Grid.ColumnSpan="2" ExpandDirection="Up" IsExpanded="True" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin">
+        <Expander Header="Collections" Margin="0,5,0,0" Grid.Row="3" Grid.ColumnSpan="3" ExpandDirection="Up" IsExpanded="False" IsEnabled="False" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin">
             <mah:MetroTabControl  Grid.Row="3" mah:TabControlHelper.Underlined="SelectedTabItem" Grid.ColumnSpan="2" Height="185">
                 <TabItem Header="Movies">
                     <Grid Background="#FFE5E5E5">
-                        <Grid HorizontalAlignment="Left" Height="82" Margin="10,10,0,0" VerticalAlignment="Top" Width="267" Background="White">
-                            <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Total Movies:" VerticalAlignment="Top" Height="68" Width="252" />
+                        <Grid HorizontalAlignment="Left" Height="82" Margin="10,10,0,0"   VerticalAlignment="Top" Width="267" Background="White">
+                            <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Total Movies:" VerticalAlignment="Top" Height="68" Width="247" />
                         </Grid>
                     </Grid>
                 </TabItem>
@@ -47,10 +48,10 @@
                 </TabItem>
             </mah:MetroTabControl>
         </Expander>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Welcome"  FontSize="32" Margin="10,0,0,0" Width="131" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" />
-        <Label Content="Actions" Height="30" Margin="10,10,143,0" Grid.Row="1" VerticalAlignment="Top" FontWeight="Bold" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" />
-        <TextBlock HorizontalAlignment="Left" Margin="10,15,0,0" TextWrapping="Wrap" Text="What's News" VerticalAlignment="Top" FontWeight="Bold" Grid.Column="1" Grid.Row="1" Height="16" Width="73" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" />
-        <ListBox Margin="10,36,10,10" ItemsSource="{Binding NotificationCollection}" Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin">
+        <TextBlock TextWrapping="Wrap" Text="Welcome"  FontSize="32" Margin="10,0" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" />
+        <Label Content="Actions" Height="30" Margin="10,10,0,0" Grid.Row="1" VerticalAlignment="Top" FontWeight="Bold" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" HorizontalAlignment="Left" Width="99" />
+        <TextBlock Margin="10,15,84,0" TextWrapping="Wrap" Text="Notifications &amp; Feed" VerticalAlignment="Top" FontWeight="Bold" Grid.Column="1" Grid.Row="1" Height="16" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" />
+        <ListBox Margin="10,36,10,10" ItemsSource="{Binding NotificationCollection}" Grid.Column="1" Grid.Row="1">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -60,10 +61,33 @@
             </ListBox.ItemTemplate>
         </ListBox>
         <ListBox Margin="10,36,10,10" Grid.Row="1" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin">
-            <ListBoxItem Content="Add Folder" />
-            <ListBoxItem Content="Synchronize Data" />
-            <ListBoxItem Content="Subtitle Find" />
-            <ListBoxItem Content="More..." />
+            <ListBoxItem Content="Add Movie Folder" />
+            <ListBoxItem Content="Add Movie File" />
+            <ListBoxItem Content="Synchronize Movie Data" IsEnabled="False" />
+            <ListBoxItem Content="Find Subtitle" IsEnabled="False" />
+            <ListBoxItem Content="More..." IsEnabled="False" />
         </ListBox>
+        <ListBox Margin="10,36,10,10" Grid.Column="2" Grid.Row="1">
+            <ListBoxItem>
+                <Grid>
+                    <ProgressBar Maximum="50" Value="34" HorizontalAlignment="Right" MinWidth="30" Margin="0,0,0,0" />
+                    <TextBlock Text="Boruto" Margin="0,-1,0,1" />
+                    <TextBlock Text="34/50"  HorizontalAlignment="Right" TextAlignment="Center"  Width="111" Margin="0,-1,0,1" />
+                </Grid>
+            </ListBoxItem>
+            <ListBoxItem>
+                <Grid>
+                    <ProgressBar Maximum="24" Value="19" HorizontalAlignment="Right" MinWidth="30" Margin="0,0,0,0" />
+                    <TextBlock Text="The Flash" Margin="0,-1,0,1" />
+                    <TextBlock Text="19/24"  HorizontalAlignment="Right" TextAlignment="Center"  Width="111" Margin="0,-1,0,1" />
+                </Grid>
+            </ListBoxItem>
+            <ListBoxItem>
+                <Grid>
+                    <TextBlock Text="Avangers : Civil War" Margin="0,-1,0,1" />
+                </Grid>
+            </ListBoxItem>
+        </ListBox>
+        <TextBlock Margin="10,15,51,0" TextWrapping="Wrap" Text="Wishlist" VerticalAlignment="Top" FontWeight="Bold" Grid.Column="2" Grid.Row="1" Height="16" d:LayoutOverrides="TopMargin, BottomMargin" />
     </Grid>
 </UserControl>

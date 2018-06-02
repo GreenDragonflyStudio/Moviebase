@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Moviebase.Services.Helpers;
+using Newtonsoft.Json;
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Moviebase.Services.Helpers;
-using Newtonsoft.Json;
+using Moviebase.Services.Entities;
 
 namespace Moviebase.Services.Title
 {
@@ -16,12 +17,19 @@ namespace Moviebase.Services.Title
             throw new NotSupportedException("Could not add provider to this instance.");
         }
 
-        public async Task<string> GuessTitle(string filename)
+        public async Task<GuessTitle> GuessTitle(string filename)
         {
             try
             {
                 var output = await ProcessHelper.StartWithOutput(AppName, string.Format(Arguments, filename), RedirectStream.StandardOutput);
-                return JsonConvert.DeserializeAnonymousType(output, new { title = "" }).title;
+                var type = new {title = "", year = 0, screen_size=""};
+                var obj = JsonConvert.DeserializeAnonymousType(output, type);
+                return new GuessTitle
+                {
+                    Title = obj.title,
+                    Year = obj.year,
+                    ScreenSize = obj.screen_size
+                };
             }
             catch (Exception e)
             {

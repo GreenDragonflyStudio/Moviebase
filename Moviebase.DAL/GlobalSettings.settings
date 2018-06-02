@@ -1,0 +1,24 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Moviebase.DAL" GeneratedClassName="GlobalSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ApiKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)">54989087497c2801d6469d34c6f42fc7</Value>
+    </Setting>
+    <Setting Name="ConnectionString" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">moviebase.db</Value>
+    </Setting>
+    <Setting Name="Reorganize" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="TargetPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">E:\test</Value>
+    </Setting>
+    <Setting Name="RenameTemplate" Type="System.String" Scope="User">
+      <Value Profile="(Default)">%title%.%ext%</Value>
+    </Setting>
+    <Setting Name="DeleteEmptyFolders" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

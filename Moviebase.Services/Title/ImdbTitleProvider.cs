@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Moviebase.Services.Entities;
 
 namespace Moviebase.Services.Title
 {
@@ -18,11 +19,12 @@ namespace Moviebase.Services.Title
             throw new NotSupportedException("Could not add provider to this instance.");
         }
 
-        public async Task<string> GuessTitle(string filename)
+        public async Task<GuessTitle> GuessTitle(string filename)
         {
-            await Task.Yield(); // TODO: is this the right usage of Task.Yield()?
+            await Task.Yield();
+
             var matched = _imdbRegex.Match(filename);
-            return matched.Success ? matched.Value : null;
+            return matched.Success ? new GuessTitle {ImdbId = matched.Value} : null;
         }
     }
 }

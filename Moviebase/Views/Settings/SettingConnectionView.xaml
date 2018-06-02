@@ -1,0 +1,13 @@
+﻿<UserControl x:Class="Moviebase.Views.Settings.SettingConnectionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Moviebase.Views"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="553.493">
+    <Grid>
+        <TextBlock Margin="10,15,0,0" Height="18" VerticalAlignment="Top" HorizontalAlignment="Left" Width="191" Text="TMDB API" />
+        <TextBox x:Name="tmdbApi" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Margin="10,38,247,0" />
+    </Grid>
+</UserControl>

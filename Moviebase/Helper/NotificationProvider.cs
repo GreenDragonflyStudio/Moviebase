@@ -7,7 +7,7 @@ namespace Moviebase.Helper
     {
         public static ObservableCollection<Notification> Notifications = new ObservableCollection<Notification>();
 
-        public static ObservableCollection<Movie> UnsyncedData = new ObservableCollection<Movie>();
+        //public static ObservableCollection<MovieItem> UnsyncedData = new ObservableCollection<MovieItem>();
 
         internal static void Notify(string msg, int prior = 1)
         {

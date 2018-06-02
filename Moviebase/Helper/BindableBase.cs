@@ -1,6 +1,7 @@
 ﻿using Moviebase.Helper;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace Moviebase.ViewModels
@@ -42,9 +43,10 @@ namespace Moviebase.ViewModels
         /// <param name="propertyName">Name of the property used to notify listeners.  This
         /// value is optional and can be provided automatically when invoked from compilers
         /// that support <see cref="CallerMemberNameAttribute"/>.</param>
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            Debug.Print("Changed: " + propertyName);
         }
 
         public DelegateCommand NavigateCommand { get; } = new DelegateCommand(DoNavigate);
@@ -59,5 +61,6 @@ namespace Moviebase.ViewModels
         {
             Navigation.Navigate(new Uri(obj.ToString(), UriKind.RelativeOrAbsolute));
         }
+
     }
 }

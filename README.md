@@ -12,36 +12,26 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-For End user usage you need
+This program runs under .NET Framework 4.5. and above, to be able to use Additional feature (GuessIt), your computer need a Python 2.6 Environment.
 
-```
-  Net Framework 4.5 (Minimum)
-  Python 2.6
-```
-
-For development your computer sould have this additional install
-
-```
-  Visual Studio 2017.
-  Net Framework 4.5 Development Pack.
-```
-
-make sure you have connected to internet or have Nuget Cache for MahApps and ControlEz
+This Application Required Internet 
 
 ## Deployment
 
-Just download the released archieve [here](https://github.com/GreenDragonflyStudio/Moviebase/releases).
+You can download our released product [here](https://github.com/GreenDragonflyStudio/Moviebase/releases).
 
-to download the source, use:
+to download the source, and compile yourself use:
 
 ```
 git clone https://github.com/GreenDragonflyStudio/Moviebase.git
 ```
+in order to build, you must have .NET Developer Pack Installed.
 
 ## Built With
 
 * [WPF](https://docs.microsoft.com/en-us/dotnet/framework/wpf/index) - The GUI framework used
 * [Mahapps Metro Framework](https://mahapps.com/) - 3rd Party UI framework
+* [Newtonsoft.Json](https://www.newtonsoft.com/) - Json Library
  
 ## Versioning
 

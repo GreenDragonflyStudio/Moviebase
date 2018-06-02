@@ -7,11 +7,15 @@
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:vm="clr-namespace:Moviebase.ViewModels"
              xmlns:i="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:converters="clr-namespace:Moviebase.Converters"
              mc:Ignorable="d"
-             d:DesignHeight="432.353" d:DesignWidth="586.667">
+             d:DesignHeight="482.353" d:DesignWidth="736.667">
     <UserControl.DataContext>
         <vm:CollectionViewModel />
     </UserControl.DataContext>
+    <UserControl.Resources>
+        <converters:GenresToStringConverter x:Key="GenresToStringConverter" />
+    </UserControl.Resources>
     <Grid>
         <Grid.Resources>
             <!--  for the azure style  -->
@@ -38,35 +42,36 @@
             <RowDefinition Height="36*" />
             <RowDefinition Height="349*" />
         </Grid.RowDefinitions>
-        <TextBox HorizontalAlignment="Left" Height="26" Margin="10,10,0,0" TextWrapping="Wrap" mah:TextBoxHelper.Watermark="Filter" VerticalAlignment="Top" Width="481" />
-        <Button Content="Apply" HorizontalAlignment="Left" Height="26" Margin="490,10,0,0" VerticalAlignment="Top" Width="58" FontSize="12" />
+        <TextBox HorizontalAlignment="Left" Height="32" Margin="10,10,0,0" TextWrapping="Wrap" mah:TextBoxHelper.Watermark="Filter" mah:TextBoxHelper.WatermarkAlignment="Center" VerticalAlignment="Top" Width="481" />
+        <Button Content="{i:Material Kind=Filter}" HorizontalAlignment="Left" Height="32" Margin="491,10,0,0" VerticalAlignment="Top"  FontSize="14" />
 
-        <mah:SplitView x:Name="splitView" Margin="0,-1,0,0" Grid.Row="1" Grid.RowSpan="2" IsPaneOpen="True" OpenPaneLength="200" PanePlacement="Right" DisplayMode="CompactInline">
+        <mah:SplitView x:Name="splitView" Margin="0,-1,0,0" Grid.Row="1" Grid.RowSpan="2" IsPaneOpen="False" OpenPaneLength="200" PanePlacement="Right" DisplayMode="Overlay">
             <mah:SplitView.Pane>
                 <local:MovieItemView DataContext="{Binding SelectedMovie}" IsExpanded="{Binding IsPaneOpen, ElementName=splitView}" />
             </mah:SplitView.Pane>
             <mah:SplitView.Content>
                 <Grid Margin="10,4,10,10" Grid.Row="1" Grid.RowSpan="2">
-                    <DataGrid Margin="0,42,0,136"
-                Style="{DynamicResource AzureDataGrid}"
-                AutoGenerateColumns="False"
-                CanUserAddRows="False"
-                CanUserReorderColumns="False"
-                CanUserResizeColumns="True"
-                CanUserResizeRows="False"
-                EnableColumnVirtualization="True"
-                EnableRowVirtualization="True"  SelectionUnit="FullRow" ItemsSource="{Binding Movies}" SelectedItem="{Binding SelectedMovie}" SelectionChanged="DataGrid_SelectionChanged">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="33" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <DataGrid Margin="0,5,0,0" Style="{DynamicResource AzureDataGrid}" AutoGenerateColumns="False"
+                              CanUserAddRows="False" CanUserReorderColumns="False" CanUserResizeColumns="True"
+                              CanUserResizeRows="False" EnableColumnVirtualization="True" EnableRowVirtualization="True"
+                              SelectionUnit="FullRow" ItemsSource="{Binding Movies}" SelectedItem="{Binding SelectedMovie}"
+                              SelectionChanged="DataGrid_SelectionChanged" Grid.Row="1" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Title" Binding="{Binding Title}" MinWidth="130" />
                             <DataGridTextColumn Header="Year" Binding="{Binding Year}"  Width="60" CanUserResize="False" />
-                            <DataGridTextColumn Header="Genre" Binding="{Binding Genre}"  MinWidth="80" />
-                            <DataGridTextColumn Header="Rating" Binding="{Binding Rating}"  MinWidth="70" />
-                            <DataGridTextColumn Header="Synced" Binding="{Binding Synced}" MinWidth="70" />
+                            <DataGridTextColumn Header="Genre" Binding="{Binding Genres, Converter={StaticResource GenresToStringConverter}}"  MinWidth="80" />
+                            <DataGridTextColumn Header="Rating" Binding="{Binding OriginalLanguage}"  MinWidth="70" />
+                            <DataGridTextColumn Header="Synced" Binding="{Binding VoteCount}" MinWidth="70" />
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Button Content="Add" HorizontalAlignment="Left" Width="72" Height="28" VerticalAlignment="Top" />
-                    <Button Content="Remove" HorizontalAlignment="Right" Width="72" Height="28" VerticalAlignment="Top" />
-                    <Image x:Name="image" HorizontalAlignment="Left" Width="132" Height="131" VerticalAlignment="Bottom" />
+                    <Button Content="{i:Material Kind=FolderPlus}" HorizontalAlignment="Left" Command="{Binding AddFolderCommand}" Width="36" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" />
+                    <Button Content="{i:Material Kind=Delete}" HorizontalAlignment="Left" Command="{Binding RemoveCommand}" Width="36" d:LayoutOverrides="TopMargin, BottomMargin" Margin="230,0,0,0" />
+                    <Image x:Name="image" HorizontalAlignment="Left" Width="132" Height="131" VerticalAlignment="Bottom" Grid.Row="1" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" />
+                    <Button Content="{i:Material Kind=FilePlus}" HorizontalAlignment="Left" Command="{Binding AddFileCommand}" Margin="41,0,0,0" Width="36" d:LayoutOverrides="LeftMargin, RightMargin, TopMargin, BottomMargin" />
                 </Grid>
             </mah:SplitView.Content>
         </mah:SplitView>
