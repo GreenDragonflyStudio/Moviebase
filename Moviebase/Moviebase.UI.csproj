@@ -260,7 +260,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\MovieBase.Core\Moviebase.Core.csproj">
+    <ProjectReference Include="..\Moviebase.Core\Moviebase.Core.csproj">
       <Project>{59edb2f5-6d53-4540-80cc-1e7ba7ed8a31}</Project>
       <Name>Moviebase.Core</Name>
     </ProjectReference>
